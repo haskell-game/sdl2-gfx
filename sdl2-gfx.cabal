@@ -1,7 +1,7 @@
 name:                sdl2-gfx
 version:             0.1
-synopsis:            Bindings to SDL_gfx.
-description:         Haskell bindings to SDL_gfx.
+synopsis:            Bindings to SDL2_gfx.
+description:         Haskell bindings to SDL2_gfx.
 license:             MIT
 license-file:        LICENSE
 author:              Siniša Biđin
@@ -19,8 +19,8 @@ library
   ghc-options: -Wall -O2
 
   exposed-modules:
-    SDL.Gfx,
-    SDL.Raw.Gfx
+    SDL.Framerate,
+    SDL.Raw.Framerate
 
   hs-source-dirs:
     src
