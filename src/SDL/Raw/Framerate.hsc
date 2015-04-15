@@ -20,6 +20,9 @@ module SDL.Raw.Framerate
   , init
   , framerateDelay
   , setFramerate
+  , pattern FPS_DEFAULT
+  , pattern FPS_LOWER_LIMIT
+  , pattern FPS_UPPER_LIMIT
   , getFramerate
   , getFramecount
   ) where
