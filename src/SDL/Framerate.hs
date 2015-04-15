@@ -16,11 +16,14 @@ There are two ways to use this functionality:
 
 -}
 
+{-# LANGUAGE LambdaCase #-}
+
 module SDL.Framerate
   ( Framerate
   , Manager(..)
   , with
   , with_
+  , Loop(..)
   , set
   , delay
   , minimum
@@ -87,13 +90,23 @@ delay (Manager ptr) = fmap fromIntegral $ SDL.Raw.Framerate.framerateDelay ptr
 
 -- | Given a target 'Framerate' and initial state, wraps a render loop and
 -- automatically calls 'delay' each frame. You still get access to the
--- 'Manager' if you want to change things dynamically. Each iteration's return
--- state is passed as input to the next iteration.
-with :: MonadIO m => Framerate -> s -> (Manager -> s -> m s) -> m ()
-with fps st render = manager >>= \m -> set m fps >> loop m st
+-- 'Manager' if you want to change things dynamically.
+--
+-- Each iteration's return state is passed as input to the next iteration. The
+-- inner function's return value, 'Loop', decides whether the loop continues or
+-- breaks and returns the final state.
+with :: MonadIO m => Framerate -> s -> (Manager -> s -> m (Loop s)) -> m s
+with fps st act = manager >>= \m -> set m fps >> loop m st
   where
-    loop m st' = render m st' >>= \st'' -> delay m >> loop m st''
+    loop m st' =
+      act m st' >>= \case
+        Continue st'' -> delay m >> loop m st''
+        Break    st'' -> return st''
+
+-- | Does the render loop, when using 'with'/'with_', continue or break?
+data Loop s = Continue s | Break s
+  deriving (Eq, Show, Ord, Typeable)
 
 -- | Same as 'with', but doesn't give access to the 'Manager'.
-with_ :: MonadIO m => Framerate -> s -> (s -> m s) -> m ()
+with_ :: MonadIO m => Framerate -> s -> (s -> m (Loop s)) -> m s
 with_ fps st = with fps st . const
