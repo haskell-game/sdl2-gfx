@@ -2,12 +2,12 @@
 
 <!-- [![Build Status](https://travis-ci.org/sbidin/sdl2-gfx.svg?branch=master)](https://travis-ci.org/sbidin/sdl2-gfx) -->
 
-#### Haskell bindings to SDL_gfx
+#### Haskell bindings to SDL2_gfx
 
 Currently a work in progress.
 
 <!-- Both the raw and the higher level bindings should allow you to use any aspect -->
-<!-- of the original SDL_gfx library. Please report an issue if you encounter a bug -->
+<!-- of the original SDL2_gfx library. Please report an issue if you encounter a bug -->
 <!-- or feel that something is missing. -->
 
 <!-- ##### Install -->
@@ -30,7 +30,7 @@ Currently a work in progress.
 <!-- You can find the documentation [here](https://bidin.eu/docs/sdl2-gfx). -->
 
 <!-- The -->
-<!-- [original SDL_gfx documentation](http://www.ferzkopp.net/Software/SDL2_gfx/Docs/html/index.html) -->
+<!-- [original SDL2_gfx documentation](http://www.ferzkopp.net/Software/SDL2_gfx/Docs/html/index.html) -->
 <!-- can also help, as the bindings are close to a direct mapping. -->
 
 <!-- ##### Example -->
