@@ -19,6 +19,7 @@ library
   ghc-options: -Wall -O2
 
   exposed-modules:
+    SDL.Raw.Primitive,
     SDL.Framerate,
     SDL.Raw.Framerate
 

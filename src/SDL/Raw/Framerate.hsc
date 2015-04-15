@@ -34,7 +34,7 @@ import Data.Typeable           (Typeable)
 import Foreign.C.Types         (CFloat(..), CInt(..))
 import Foreign.Ptr             (Ptr)
 import Foreign.Storable        (Storable(..))
-import GHC.Word                (Word32)
+import Data.Word               (Word32)
 import Prelude          hiding (init)
 
 pattern FPS_DEFAULT     = (#const FPS_DEFAULT)
@@ -71,29 +71,34 @@ instance Storable Manager where
 foreign import ccall "SDL2_framerate.h SDL_initFramerate"
   init' :: Ptr Manager -> IO ()
 
+{-# INLINE init #-}
 init :: MonadIO m => Ptr Manager -> m ()
 init = liftIO . init'
 
 foreign import ccall "SDL2_framerate.h SDL_getFramecount"
   getFramecount' :: Ptr Manager -> IO CInt
 
+{-# INLINE getFramecount #-}
 getFramecount :: MonadIO m => Ptr Manager -> m CInt
 getFramecount = liftIO . getFramecount'
 
 foreign import ccall "SDL2_framerate.h SDL_framerateDelay"
   framerateDelay' :: Ptr Manager -> IO Word32
 
+{-# INLINE framerateDelay #-}
 framerateDelay :: MonadIO m => Ptr Manager -> m Word32
 framerateDelay = liftIO . framerateDelay'
 
 foreign import ccall "SDL2_framerate.h SDL_getFramerate"
   getFramerate' :: Ptr Manager -> IO CInt
 
+{-# INLINE getFramerate #-}
 getFramerate :: MonadIO m => Ptr Manager -> m CInt
 getFramerate = liftIO . getFramerate'
 
 foreign import ccall "SDL2_framerate.h SDL_setFramerate"
   setFramerate' :: Ptr Manager -> Word32 -> IO CInt
 
+{-# INLINE setFramerate #-}
 setFramerate :: MonadIO m => Ptr Manager -> Word32 -> m CInt
 setFramerate fps = liftIO . setFramerate' fps
