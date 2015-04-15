@@ -238,7 +238,7 @@ fillTrigon
 fillTrigon rndr x y x2 y2 x3 y3 r g b =
   liftIO . fillTrigon' rndr x y x2 y2 x3 y3 r g b
 
--- | How many of a certain thing, i.e. how many points.
+-- | How many of a certain thing, e.g. how many points.
 type N = CInt
 
 foreign import ccall "SDL2_gfxPrimitives.h polygonRGBA"
