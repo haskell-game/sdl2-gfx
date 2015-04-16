@@ -11,6 +11,8 @@ functionality from @SDL2_gfxPrimitives.h@.
 
 -}
 
+{-# OPTIONS_GHC -fno-warn-missing-signatures #-}
+
 {-# LANGUAGE TemplateHaskell #-}
 
 module SDL.Raw.Primitive

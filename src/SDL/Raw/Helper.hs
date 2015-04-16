@@ -18,7 +18,7 @@ inlined MonadIO variant. Use this to simplify the package's SDL.Raw.* modules.
 module SDL.Raw.Helper where
 
 import Control.Monad           (replicateM)
-import Control.Monad.IO.Class  (MonadIO, liftIO)
+import Control.Monad.IO.Class  (liftIO)
 import Language.Haskell.TH
 
 -- | Given a name @fname@, a name of a C function @cname@ and the desired
