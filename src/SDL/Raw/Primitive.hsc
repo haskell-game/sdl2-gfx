@@ -99,7 +99,7 @@ liftF "rect" "SDL2_gfxPrimitives.h rectangleRGBA"
 -- | A radius.
 type Rad = Int16
 
-liftF "roundRect" "SDL2_gfxPrimitives.h roundedRectangleRGBA"
+liftF "roundedRectangle" "SDL2_gfxPrimitives.h roundedRectangleRGBA"
   [t|Ptr Renderer -> X -> Y -> X -> Y -> Rad -> R -> G -> B -> A -> IO CInt|]
 
 liftF "box" "SDL2_gfxPrimitives.h boxRGBA"
