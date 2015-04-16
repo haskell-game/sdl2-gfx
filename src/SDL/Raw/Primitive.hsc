@@ -16,20 +16,20 @@ functionality from @SDL2_gfxPrimitives.h@.
 module SDL.Raw.Primitive
   ( X
   , Y
+  , W
+  , H
+  , Rad
   , R
+  , N
   , G
   , B
   , A
   , pixel
-  , W
   , hline
-  , H
   , vline
   , line
   , aaLine
   , thickLine
-  , Rad
-  , N
   , bezier
   , rect
   , roundRect
