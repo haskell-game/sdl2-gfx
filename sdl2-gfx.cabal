@@ -33,9 +33,6 @@ library
     sdl2 >= 2.0.3,
     SDL2_gfx >= 1.0.1
 
-  -- c-sources:
-  --   cbits/helpers.c
-
   build-depends:
     base             >= 4.7 && < 5,
     bytestring       >= 0.10.4.0,
