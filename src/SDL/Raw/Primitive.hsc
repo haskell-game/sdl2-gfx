@@ -32,9 +32,9 @@ module SDL.Raw.Primitive
   , thickLine
   , bezier
   , rect
-  , roundRect
+  , roundedRectangle
   , box
-  , roundBox
+  , roundedBox
   , circle
   , aaCircle
   , filledCircle
@@ -105,7 +105,7 @@ liftF "roundedRectangle" "SDL2_gfxPrimitives.h roundedRectangleRGBA"
 liftF "box" "SDL2_gfxPrimitives.h boxRGBA"
   [t|Ptr Renderer -> X -> Y -> X -> Y -> R -> G -> B -> A -> IO CInt|]
 
-liftF "roundBox" "SDL2_gfxPrimitives.h roundedBoxRGBA"
+liftF "roundedBox" "SDL2_gfxPrimitives.h roundedBoxRGBA"
   [t|Ptr Renderer -> X -> Y -> X -> Y -> Rad -> R -> G -> B -> A -> IO CInt|]
 
 liftF "line" "SDL2_gfxPrimitives.h lineRGBA"
