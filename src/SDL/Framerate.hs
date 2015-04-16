@@ -6,7 +6,7 @@ License     : MIT
 Maintainer  : sinisa@bidin.cc
 Stability   : experimental
 
-Bindings to @SDL2_gfx@'s framerate management functionality. These actions
+Bindings to @SDL2_gfx@'s framerate management functionality. These functions
 should allow you to set, manage and query a target application framerate.
 
 -}
