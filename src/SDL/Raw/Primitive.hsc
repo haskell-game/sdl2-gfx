@@ -18,8 +18,6 @@ functionality from @SDL2_gfxPrimitives.h@.
 module SDL.Raw.Primitive
   ( X
   , Y
-  , W
-  , H
   , Rad
   , R
   , N
@@ -27,13 +25,15 @@ module SDL.Raw.Primitive
   , B
   , A
   , pixel
+  , L
   , hline
   , vline
   , line
   , aaLine
+  , W
   , thickLine
   , bezier
-  , rect
+  , rectangle
   , roundedRectangle
   , box
   , roundedBox
@@ -83,19 +83,16 @@ type A = Word8
 liftF "pixel" "pixelRGBA"
   [t|Renderer -> X -> Y -> R -> G -> B -> A -> IO CInt|]
 
--- | A width.
-type W = Int16
+-- | A length.
+type L = Int16
 
 liftF "hline" "hlineRGBA"
-  [t|Renderer -> X -> Y -> W -> R -> G -> B -> A -> IO CInt|]
-
--- | A height.
-type H = Int16
+  [t|Renderer -> X -> Y -> L -> R -> G -> B -> A -> IO CInt|]
 
 liftF "vline" "vlineRGBA"
-  [t|Renderer -> X -> Y -> H -> R -> G -> B -> A -> IO CInt|]
+  [t|Renderer -> X -> Y -> L -> R -> G -> B -> A -> IO CInt|]
 
-liftF "rect" "rectangleRGBA"
+liftF "rectangle" "rectangleRGBA"
   [t|Renderer -> X -> Y -> X -> Y -> R -> G -> B -> A -> IO CInt|]
 
 -- | A radius.
@@ -115,6 +112,9 @@ liftF "line" "lineRGBA"
 
 liftF "aaLine" "aalineRGBA"
   [t|Renderer -> X -> Y -> X -> Y -> R -> G -> B -> A -> IO CInt|]
+
+-- | A width.
+type W = Int16
 
 liftF "thickLine" "thickLineRGBA"
   [t|Renderer -> X -> Y -> X -> Y -> W -> R -> G -> B -> A -> IO CInt|]
