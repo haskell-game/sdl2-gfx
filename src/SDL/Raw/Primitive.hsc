@@ -11,14 +11,15 @@ functionality from @SDL2_gfxPrimitives.h@.
 
 -}
 
--- {-# LANGUAGE DeriveDataTypeable  #-}
--- {-# LANGUAGE PatternSynonyms     #-}
--- {-# LANGUAGE RecordWildCards     #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module SDL.Raw.Primitive
   ( X
   , Y
-  , ColorF
+  , R
+  , G
+  , B
+  , A
   , pixel
   , W
   , hline
@@ -27,7 +28,7 @@ module SDL.Raw.Primitive
   , line
   , aaLine
   , thickLine
-  , R
+  , Rad
   , N
   , bezier
   , rect
@@ -36,30 +37,28 @@ module SDL.Raw.Primitive
   , roundBox
   , circle
   , aaCircle
-  , fillCircle
+  , filledCircle
   , arc
   , ellipse
   , aaEllipse
-  , fillEllipse
+  , filledEllipse
   , pie
-  , fillPie
+  , filledPie
   , trigon
   , aaTrigon
-  , fillTrigon
+  , filledTrigon
   , polygon
   , aaPolygon
-  , fillPolygon
-  , texPolygon
+  , filledPolygon
+  , texturedPolygon
   ) where
 
-#include "SDL2_gfxPrimitives.h"
-
-import Control.Monad.IO.Class  (MonadIO, liftIO)
+import Data.Int                (Int16)
+import Data.Word               (Word8)
 import Foreign.C.Types         (CInt(..))
 import Foreign.Ptr             (Ptr)
-import Data.Word               (Word8)
-import Data.Int                (Int16)
 import SDL.Raw                 (Renderer, Surface)
+import SDL.Raw.Helper          (liftF)
 
 -- | The position of something on the x-axis.
 type X = Int16
@@ -67,224 +66,107 @@ type X = Int16
 -- | Same as 'X', but for the y-axis.
 type Y = Int16
 
--- | All of the actions here accept as their last arguments the RGBA color
--- they're drawing with, while also returning a 'CInt'. This makes 'ColorF' a
--- useful shorthand. The components accepted are R, G, B and A, respectively.
-type ColorF m = Word8 -> Word8 -> Word8 -> Word8 -> m CInt
+-- | The red color component.
+type R = Word8
 
-foreign import ccall "SDL2_gfxPrimitives.h pixelRGBA"
-  pixel' :: Ptr Renderer -> X -> Y -> ColorF IO
+-- | The green color component.
+type G = Word8
 
-{-# INLINE pixel #-}
-pixel :: MonadIO m => Ptr Renderer -> X -> Y -> ColorF m
-pixel rndr x y r g b = liftIO . pixel' rndr x y r g b
+-- | The blue color component.
+type B = Word8
+
+-- | The alpha color component.
+type A = Word8
+
+liftF "pixel" "SDL2_gfxPrimitives.h pixelRGBA"
+  [t|Ptr Renderer -> X -> Y -> R -> G -> B -> A -> IO CInt|]
 
 -- | A width.
 type W = Int16
 
-foreign import ccall "SDL2_gfxPrimitives.h hlineRGBA"
-  hline' :: Ptr Renderer -> X -> Y -> W -> ColorF IO
-
-{-# INLINE hline #-}
-hline :: MonadIO m => Ptr Renderer -> X -> Y -> W -> ColorF m
-hline rndr x y w r g b = liftIO . hline' rndr x y w r g b
+liftF "hline" "SDL2_gfxPrimitives.h hlineRGBA"
+  [t|Ptr Renderer -> X -> Y -> W -> R -> G -> B -> A -> IO CInt|]
 
 -- | A height.
 type H = Int16
 
-foreign import ccall "SDL2_gfxPrimitives.h vlineRGBA"
-  vline' :: Ptr Renderer -> X -> Y -> H -> ColorF IO
+liftF "vline" "SDL2_gfxPrimitives.h vlineRGBA"
+  [t|Ptr Renderer -> X -> Y -> H -> R -> G -> B -> A -> IO CInt|]
 
-{-# INLINE vline #-}
-vline :: MonadIO m => Ptr Renderer -> X -> Y -> H -> ColorF m
-vline rndr x y h r g b = liftIO . vline' rndr x y h r g b
-
-foreign import ccall "SDL2_gfxPrimitives.h rectangleRGBA"
-  rect' :: Ptr Renderer -> X -> Y -> X -> Y -> ColorF IO
-
-{-# INLINE rect #-}
-rect :: MonadIO m => Ptr Renderer -> X -> Y -> X -> Y -> ColorF m
-rect rndr x y x2 y2 r g b = liftIO . rect' rndr x y x2 y2 r g b
+liftF "rect" "SDL2_gfxPrimitives.h rectangleRGBA"
+  [t|Ptr Renderer -> X -> Y -> X -> Y -> R -> G -> B -> A -> IO CInt|]
 
 -- | A radius.
-type R = Int16
+type Rad = Int16
 
-foreign import ccall "SDL2_gfxPrimitives.h roundedRectangleRGBA"
-  roundRect' :: Ptr Renderer -> X -> Y -> X -> Y -> R -> ColorF IO
+liftF "roundRect" "SDL2_gfxPrimitives.h roundedRectangleRGBA"
+  [t|Ptr Renderer -> X -> Y -> X -> Y -> Rad -> R -> G -> B -> A -> IO CInt|]
 
-{-# INLINE roundRect #-}
-roundRect :: MonadIO m => Ptr Renderer -> X -> Y -> X -> Y -> R -> ColorF m
-roundRect rndr x y x2 y2 s r g b = liftIO . roundRect' rndr x y x2 y2 s r g b
+liftF "box" "SDL2_gfxPrimitives.h boxRGBA"
+  [t|Ptr Renderer -> X -> Y -> X -> Y -> R -> G -> B -> A -> IO CInt|]
 
-foreign import ccall "SDL2_gfxPrimitives.h boxRGBA"
-  box' :: Ptr Renderer -> X -> Y -> X -> Y -> ColorF IO
+liftF "roundBox" "SDL2_gfxPrimitives.h roundedBoxRGBA"
+  [t|Ptr Renderer -> X -> Y -> X -> Y -> Rad -> R -> G -> B -> A -> IO CInt|]
 
-{-# INLINE box #-}
-box :: MonadIO m => Ptr Renderer -> X -> Y -> X -> Y -> ColorF m
-box rndr x y x2 y2 r g b = liftIO . box' rndr x y x2 y2 r g b
+liftF "line" "SDL2_gfxPrimitives.h lineRGBA"
+  [t|Ptr Renderer -> X -> Y -> X -> Y -> R -> G -> B -> A -> IO CInt|]
 
-foreign import ccall "SDL2_gfxPrimitives.h roundedBoxRGBA"
-  roundBox' :: Ptr Renderer -> X -> Y -> X -> Y -> R -> ColorF IO
+liftF "aaLine" "SDL2_gfxPrimitives.h aalineRGBA"
+  [t|Ptr Renderer -> X -> Y -> X -> Y -> R -> G -> B -> A -> IO CInt|]
 
-{-# INLINE roundBox #-}
-roundBox :: MonadIO m => Ptr Renderer -> X -> Y -> X -> Y -> R -> ColorF m
-roundBox rndr x y x2 y2 s r g b = liftIO . roundBox' rndr x y x2 y2 s r g b
+liftF "thickLine" "SDL2_gfxPrimitives.h thickLineRGBA"
+  [t|Ptr Renderer -> X -> Y -> X -> Y -> W -> R -> G -> B -> A -> IO CInt|]
 
-foreign import ccall "SDL2_gfxPrimitives.h lineRGBA"
-  line' :: Ptr Renderer -> X -> Y -> X -> Y -> ColorF IO
+liftF "circle" "SDL2_gfxPrimitives.h circleRGBA"
+  [t|Ptr Renderer -> X -> Y -> Rad -> R -> G -> B -> A -> IO CInt|]
 
-{-# INLINE line #-}
-line :: MonadIO m => Ptr Renderer -> X -> Y -> X -> Y -> ColorF m
-line rndr x y x2 y2 r g b = liftIO . line' rndr x y x2 y2 r g b
+liftF "arc" "SDL2_gfxPrimitives.h arcRGBA"
+  [t|Ptr Renderer -> X -> Y -> Rad -> Rad -> Rad -> R -> G -> B -> A -> IO CInt|]
 
-foreign import ccall "SDL2_gfxPrimitives.h aalineRGBA"
-  aaLine' :: Ptr Renderer -> X -> Y -> X -> Y -> ColorF IO
+liftF "aaCircle" "SDL2_gfxPrimitives.h aacircleRGBA"
+  [t|Ptr Renderer -> X -> Y -> Rad -> R -> G -> B -> A -> IO CInt|]
 
-{-# INLINE aaLine #-}
-aaLine :: MonadIO m => Ptr Renderer -> X -> Y -> X -> Y -> ColorF m
-aaLine rndr x y x2 y2 r g b = liftIO . aaLine' rndr x y x2 y2 r g b
+liftF "filledCircle" "SDL2_gfxPrimitives.h filledCircleRGBA"
+  [t|Ptr Renderer -> X -> Y -> Rad -> R -> G -> B -> A -> IO CInt|]
 
-foreign import ccall "SDL2_gfxPrimitives.h thickLineRGBA"
-  thickLine' :: Ptr Renderer -> X -> Y -> X -> Y -> W -> ColorF IO
+liftF "ellipse" "SDL2_gfxPrimitives.h ellipseRGBA"
+  [t|Ptr Renderer -> X -> Y -> Rad -> Rad -> R -> G -> B -> A -> IO CInt|]
 
-{-# INLINE thickLine #-}
-thickLine :: MonadIO m => Ptr Renderer -> X -> Y -> X -> Y -> W -> ColorF m
-thickLine rndr x y x2 y2 w r g b = liftIO . thickLine' rndr x y x2 y2 w r g b
+liftF "aaEllipse" "SDL2_gfxPrimitives.h aaellipseRGBA"
+  [t|Ptr Renderer -> X -> Y -> Rad -> Rad -> R -> G -> B -> A -> IO CInt|]
 
-foreign import ccall "SDL2_gfxPrimitives.h circleRGBA"
-  circle' :: Ptr Renderer -> X -> Y -> R -> ColorF IO
+liftF "filledEllipse" "SDL2_gfxPrimitives.h filledEllipseRGBA"
+  [t|Ptr Renderer -> X -> Y -> Rad -> Rad -> R -> G -> B -> A -> IO CInt|]
 
-{-# INLINE circle #-}
-circle :: MonadIO m => Ptr Renderer -> X -> Y -> R -> ColorF m
-circle rndr x y rad r g b = liftIO . circle' rndr x y rad r g b
+liftF "pie" "SDL2_gfxPrimitives.h pieRGBA"
+  [t|Ptr Renderer -> X -> Y -> Rad -> Rad -> Rad -> R -> G -> B -> A -> IO CInt|]
 
-foreign import ccall "SDL2_gfxPrimitives.h arcRGBA"
-  arc' :: Ptr Renderer -> X -> Y -> R -> R -> R -> ColorF IO
+liftF "filledPie" "SDL2_gfxPrimitives.h filledPieRGBA"
+  [t|Ptr Renderer -> X -> Y -> Rad -> Rad -> Rad -> R -> G -> B -> A -> IO CInt|]
 
-{-# INLINE arc #-}
-arc :: MonadIO m => Ptr Renderer -> X -> Y -> R -> R -> R -> ColorF m
-arc rndr x y rad s e r g b = liftIO . arc' rndr x y rad s e r g b
+liftF "trigon" "SDL2_gfxPrimitives.h trigonRGBA"
+  [t|Ptr Renderer -> X -> Y -> X -> Y -> X -> Y -> R -> G -> B -> A -> IO CInt|]
 
-foreign import ccall "SDL2_gfxPrimitives.h aacircleRGBA"
-  aaCircle' :: Ptr Renderer -> X -> Y -> R -> ColorF IO
+liftF "aaTrigon" "SDL2_gfxPrimitives.h aatrigonRGBA"
+  [t|Ptr Renderer -> X -> Y -> X -> Y -> X -> Y -> R -> G -> B -> A -> IO CInt|]
 
-{-# INLINE aaCircle #-}
-aaCircle :: MonadIO m => Ptr Renderer -> X -> Y -> R -> ColorF m
-aaCircle rndr x y rad r g b = liftIO . aaCircle' rndr x y rad r g b
-
-foreign import ccall "SDL2_gfxPrimitives.h filledCircleRGBA"
-  fillCircle' :: Ptr Renderer -> X -> Y -> R -> ColorF IO
-
-{-# INLINE fillCircle #-}
-fillCircle :: MonadIO m => Ptr Renderer -> X -> Y -> R -> ColorF m
-fillCircle rndr x y rad r g b = liftIO . fillCircle' rndr x y rad r g b
-
-foreign import ccall "SDL2_gfxPrimitives.h ellipseRGBA"
-  ellipse' :: Ptr Renderer -> X -> Y -> R -> R -> ColorF IO
-
-{-# INLINE ellipse #-}
-ellipse :: MonadIO m => Ptr Renderer -> X -> Y -> R -> R -> ColorF m
-ellipse rndr x y rx ry r g b = liftIO . ellipse' rndr x y rx ry r g b
-
-foreign import ccall "SDL2_gfxPrimitives.h aaellipseRGBA"
-  aaEllipse' :: Ptr Renderer -> X -> Y -> R -> R -> ColorF IO
-
-{-# INLINE aaEllipse #-}
-aaEllipse :: MonadIO m => Ptr Renderer -> X -> Y -> R -> R -> ColorF m
-aaEllipse rndr x y rx ry r g b = liftIO . aaEllipse' rndr x y rx ry r g b
-
-foreign import ccall "SDL2_gfxPrimitives.h filledEllipseRGBA"
-  fillEllipse' :: Ptr Renderer -> X -> Y -> R -> R -> ColorF IO
-
-{-# INLINE fillEllipse #-}
-fillEllipse :: MonadIO m => Ptr Renderer -> X -> Y -> R -> R -> ColorF m
-fillEllipse rndr x y rx ry r g b = liftIO . fillEllipse' rndr x y rx ry r g b
-
-foreign import ccall "SDL2_gfxPrimitives.h pieRGBA"
-  pie' :: Ptr Renderer -> X -> Y -> R -> R -> R -> ColorF IO
-
-{-# INLINE pie #-}
-pie :: MonadIO m => Ptr Renderer -> X -> Y -> R -> R -> R -> ColorF m
-pie rndr x y rad s e r g b = liftIO . pie' rndr x y rad s e r g b
-
-foreign import ccall "SDL2_gfxPrimitives.h filledPieRGBA"
-  fillPie' :: Ptr Renderer -> X -> Y -> R -> R -> R -> ColorF IO
-
-{-# INLINE fillPie #-}
-fillPie :: MonadIO m => Ptr Renderer -> X -> Y -> R -> R -> R -> ColorF m
-fillPie rndr x y rad s e r g b = liftIO . fillPie' rndr x y rad s e r g b
-
-foreign import ccall "SDL2_gfxPrimitives.h trigonRGBA"
-  trigon' :: Ptr Renderer -> X -> Y -> X -> Y -> X -> Y -> ColorF IO
-
-{-# INLINE trigon #-}
-trigon :: MonadIO m => Ptr Renderer -> X -> Y -> X -> Y -> X -> Y -> ColorF m
-trigon rndr x y x2 y2 x3 y3 r g b = liftIO . trigon' rndr x y x2 y2 x3 y3 r g b
-
-foreign import ccall "SDL2_gfxPrimitives.h aatrigonRGBA"
-  aaTrigon' :: Ptr Renderer -> X -> Y -> X -> Y -> X -> Y -> ColorF IO
-
-{-# INLINE aaTrigon #-}
-aaTrigon :: MonadIO m => Ptr Renderer -> X -> Y -> X -> Y -> X -> Y -> ColorF m
-aaTrigon rndr x y x2 y2 x3 y3 r g b =
-  liftIO . aaTrigon' rndr x y x2 y2 x3 y3 r g b
-
-foreign import ccall "SDL2_gfxPrimitives.h filledTrigonRGBA"
-  fillTrigon' :: Ptr Renderer -> X -> Y -> X -> Y -> X -> Y -> ColorF IO
-
-{-# INLINE fillTrigon #-}
-fillTrigon
-  :: MonadIO m => Ptr Renderer -> X -> Y -> X -> Y -> X -> Y -> ColorF m
-fillTrigon rndr x y x2 y2 x3 y3 r g b =
-  liftIO . fillTrigon' rndr x y x2 y2 x3 y3 r g b
+liftF "filledTrigon" "SDL2_gfxPrimitives.h filledTrigonRGBA"
+  [t|Ptr Renderer -> X -> Y -> X -> Y -> X -> Y -> R -> G -> B -> A -> IO CInt|]
 
 -- | How many of a certain thing, e.g. how many points.
 type N = CInt
 
-foreign import ccall "SDL2_gfxPrimitives.h polygonRGBA"
-  polygon' :: Ptr Renderer -> Ptr X -> Ptr Y -> N -> ColorF IO
+liftF "polygon" "SDL2_gfxPrimitives.h polygonRGBA"
+  [t|Ptr Renderer -> Ptr X -> Ptr Y -> N -> R -> G -> B -> A -> IO CInt|]
 
-{-# INLINE polygon #-}
-polygon :: MonadIO m => Ptr Renderer -> Ptr X -> Ptr Y -> N -> ColorF m
-polygon rndr xs ys n r g b = liftIO . polygon' rndr xs ys n r g b
+liftF "aaPolygon" "SDL2_gfxPrimitives.h aapolygonRGBA"
+  [t|Ptr Renderer -> Ptr X -> Ptr Y -> N -> R -> G -> B -> A -> IO CInt|]
 
-foreign import ccall "SDL2_gfxPrimitives.h aapolygonRGBA"
-  aaPolygon' :: Ptr Renderer -> Ptr X -> Ptr Y -> N -> ColorF IO
+liftF "filledPolygon" "SDL2_gfxPrimitives.h filledPolygonRGBA"
+  [t|Ptr Renderer -> Ptr X -> Ptr Y -> N -> R -> G -> B -> A -> IO CInt|]
 
-{-# INLINE aaPolygon #-}
-aaPolygon :: MonadIO m => Ptr Renderer -> Ptr X -> Ptr Y -> N -> ColorF m
-aaPolygon rndr xs ys n r g b = liftIO . aaPolygon' rndr xs ys n r g b
+liftF "texturedPolygon" "SDL2_gfxPrimitives.h texturedPolygonRGBA"
+  [t|Ptr Renderer -> Ptr X -> Ptr Y -> N -> Ptr Surface -> X -> Y -> R -> G -> B -> A -> IO CInt|]
 
-foreign import ccall "SDL2_gfxPrimitives.h filledPolygonRGBA"
-  fillPolygon' :: Ptr Renderer -> Ptr X -> Ptr Y -> N -> ColorF IO
-
-{-# INLINE fillPolygon #-}
-fillPolygon :: MonadIO m => Ptr Renderer -> Ptr X -> Ptr Y -> N -> ColorF m
-fillPolygon rndr xs ys n r g b = liftIO . fillPolygon' rndr xs ys n r g b
-
-foreign import ccall "SDL2_gfxPrimitives.h texturedPolygonRGBA"
-  texPolygon'
-    :: Ptr Renderer ->
-       Ptr X -> Ptr Y -> N ->
-       Ptr Surface ->
-       X -> Y ->
-       ColorF IO
-
-{-# INLINE texPolygon #-}
-texPolygon
-  :: MonadIO m =>
-     Ptr Renderer ->
-     Ptr X -> Ptr Y -> N ->
-     Ptr SDL.Raw.Surface ->
-     X -> Y ->
-     ColorF m
-texPolygon rndr xs ys n s dx dy r g b =
-  liftIO . texPolygon' rndr xs ys n s dx dy r g b
-
-foreign import ccall "SDL2_gfxPrimitives.h bezierRGBA"
-  bezier' :: Ptr Renderer -> Ptr X -> Ptr Y -> N -> N -> ColorF IO
-
-{-# INLINE bezier #-}
-{-| The 4th argument is the number of interpolation steps, minimum being 2. -}
-bezier :: MonadIO m => Ptr Renderer -> Ptr X -> Ptr Y -> N -> N -> ColorF m
-bezier rndr xs ys n s r g b = liftIO . bezier' rndr xs ys n s r g b
+liftF "bezier" "SDL2_gfxPrimitives.h bezierRGBA"
+  [t|Ptr Renderer -> Ptr X -> Ptr Y -> N -> N -> R -> G -> B -> A -> IO CInt|]

@@ -101,4 +101,4 @@ foreign import ccall "SDL2_framerate.h SDL_setFramerate"
 
 {-# INLINE setFramerate #-}
 setFramerate :: MonadIO m => Ptr Manager -> Word32 -> m CInt
-setFramerate fps = liftIO . setFramerate' fps
+setFramerate ptr = liftIO . setFramerate' ptr
