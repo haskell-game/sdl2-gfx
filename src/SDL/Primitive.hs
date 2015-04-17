@@ -30,18 +30,18 @@ module SDL.Primitive
   -- * Lines
   , line
   , Length
-  , hline
-  , vline
+  , horizontalLine
+  , verticalLine
   , smoothLine
   , Width
   , thickLine
 
   -- * Rectangles
-  , rect
+  , rectangle
   , Radius
-  , roundRect
-  , fillRect
-  , fillRoundRect
+  , roundRectangle
+  , fillRectangle
+  , fillRoundRectangle
 
   -- * Curves
   , Start
@@ -112,51 +112,53 @@ smoothLine (Renderer p) (V2 x y) (V2 u v) (V4 r g b a) =
 -- | A length in pixels.
 type Length = CInt
 
--- | Renders a horizontal line of a certain 'Length'.
-hline :: MonadIO m => Renderer -> Pos -> Length -> Color -> m ()
-hline (Renderer p) (V2 x y) w (V4 r g b a) =
-  throwIfNeg_ "SDL.Primitive.hline" "hlineRGBA" $
+-- | Renders a horizontal line of a certain 'Length', its left and starting
+-- point corresponding to a given 'Pos'.
+horizontalLine :: MonadIO m => Renderer -> Pos -> Length -> Color -> m ()
+horizontalLine (Renderer p) (V2 x y) w (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.horizontalLine" "hlineRGBA" $
     SDL.Raw.Primitive.hline
-      p (cint x) (cint y) (cint w) r g b a
+      p (cint x) (cint $ x + w) (cint y) r g b a
 
--- | Renders a vertical line of a certain 'Length'.
-vline :: MonadIO m => Renderer -> Pos -> Length -> Color -> m ()
-vline (Renderer p) (V2 x y) h (V4 r g b a) =
-  throwIfNeg_ "SDL.Primitive.vline" "vlineRGBA" $
+-- | Renders a vertical line of a certain 'Length', its top and starting point
+-- corresponding to a given 'Pos'.
+verticalLine :: MonadIO m => Renderer -> Pos -> Length -> Color -> m ()
+verticalLine (Renderer p) (V2 x y) h (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.verticalLine" "vlineRGBA" $
     SDL.Raw.Primitive.vline
-      p (cint x) (cint y) (cint h) r g b a
+      p (cint x) (cint y) (cint $ y + h) r g b a
 
 -- | Renders a transparent rectangle spanning two points, bordered by a line of
 -- a given 'Color'.
-rect :: MonadIO m => Renderer -> Pos -> Pos -> Color -> m ()
-rect (Renderer p) (V2 x y) (V2 u v) (V4 r g b a) =
-  throwIfNeg_ "SDL.Primitive.rect" "rectangleRGBA" $
+rectangle :: MonadIO m => Renderer -> Pos -> Pos -> Color -> m ()
+rectangle (Renderer p) (V2 x y) (V2 u v) (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.rectangle" "rectangleRGBA" $
     SDL.Raw.Primitive.rectangle
       p (cint x) (cint y) (cint u) (cint v) r g b a
 
 -- | A radius in pixels.
 type Radius = CInt
 
--- | Same as 'rect', but the rectangle's corners are rounded. Control the
+-- | Same as 'rectangle', but the rectangle's corners are rounded. Control the
 -- roundness using the 'Radius' argument, defining the radius of the corner
 -- arcs.
-roundRect :: MonadIO m => Renderer -> Pos -> Pos -> Radius -> Color -> m ()
-roundRect (Renderer p) (V2 x y) (V2 u v) rad (V4 r g b a) =
-  throwIfNeg_ "SDL.Primitive.roundRect" "roundedRectangleRGBA" $
+roundRectangle :: MonadIO m => Renderer -> Pos -> Pos -> Radius -> Color -> m ()
+roundRectangle (Renderer p) (V2 x y) (V2 u v) rad (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.roundRectangle" "roundedRectangleRGBA" $
     SDL.Raw.Primitive.roundedRectangle
       p (cint x) (cint y) (cint u) (cint v) (cint rad) r g b a
 
--- | Same as 'rect', but the rectangle is filled by the given 'Color'.
-fillRect :: MonadIO m => Renderer -> Pos -> Pos -> Color -> m ()
-fillRect (Renderer p) (V2 x y) (V2 u v) (V4 r g b a) =
-  throwIfNeg_ "SDL.Primitive.fillRect" "boxRGBA" $
+-- | Same as 'rectangle', but the rectangle is filled by the given 'Color'.
+fillRectangle :: MonadIO m => Renderer -> Pos -> Pos -> Color -> m ()
+fillRectangle (Renderer p) (V2 x y) (V2 u v) (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.fillRectangle" "boxRGBA" $
     SDL.Raw.Primitive.box
       p (cint x) (cint y) (cint u) (cint v) r g b a
 
--- | Same as 'roundRect', but the rectangle is filled by the given 'Color'.
-fillRoundRect :: MonadIO m => Renderer -> Pos -> Pos -> Radius -> Color -> m ()
-fillRoundRect (Renderer p) (V2 x y) (V2 u v) rad (V4 r g b a) =
-  throwIfNeg_ "SDL.Primitive.fillRoundRect" "roundedBoxRGBA" $
+-- | Same as 'roundRectangle', but the rectangle is filled by the given 'Color'.
+fillRoundRectangle :: MonadIO m => Renderer -> Pos -> Pos -> Radius -> Color -> m ()
+fillRoundRectangle (Renderer p) (V2 x y) (V2 u v) rad (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.fillRoundRectangle" "roundedBoxRGBA" $
     SDL.Raw.Primitive.roundedBox
       p (cint x) (cint y) (cint u) (cint v) (cint rad) r g b a
 
