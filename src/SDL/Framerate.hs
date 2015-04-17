@@ -24,6 +24,7 @@ module SDL.Framerate
   , maximum
   , get
   , count
+  , destroyManager
   ) where
 
 import Control.Monad          (void)
@@ -88,3 +89,7 @@ delay (Manager ptr) = fmap fromIntegral $ SDL.Raw.Framerate.framerateDelay ptr
 -- | Same as 'delay', but doesn't return the time since it was last called.
 delay_ :: MonadIO m => Manager -> m ()
 delay_ = void . delay
+
+-- | Frees a framerate manager. Make sure not to use it again after this action.
+destroyManager :: MonadIO m => Manager -> m ()
+destroyManager (Manager ptr) = liftIO $ free ptr
