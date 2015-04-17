@@ -11,9 +11,12 @@ functionality from @SDL2_framerate.h@.
 
 -}
 
+{-# OPTIONS_GHC -fno-warn-missing-signatures #-}
+
 {-# LANGUAGE DeriveDataTypeable  #-}
 {-# LANGUAGE PatternSynonyms     #-}
 {-# LANGUAGE RecordWildCards     #-}
+{-# LANGUAGE TemplateHaskell     #-}
 
 module SDL.Raw.Framerate
   ( Manager(..)
@@ -29,7 +32,7 @@ module SDL.Raw.Framerate
 
 #include "SDL2_framerate.h"
 
-import Control.Monad.IO.Class  (MonadIO, liftIO)
+import Control.Monad.IO.Class  (liftIO)
 import Data.Typeable           (Typeable)
 import Foreign.C.Types         (CFloat(..), CInt(..))
 import Foreign.Ptr             (Ptr)
