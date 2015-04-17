@@ -11,7 +11,7 @@ should allow you to render various simple shapes such as lines, ellipses or
 polygons.
 
 All of the monadic functions within this module are capable of throwing an
-'SDLException' if they encounter an error.
+'SDL.Exception.SDLException' if they encounter an error.
 
 -}
 
@@ -20,35 +20,49 @@ All of the monadic functions within this module are capable of throwing an
 {-# LANGUAGE LambdaCase         #-}
 {-# LANGUAGE OverloadedStrings  #-}
 
-module SDL.Primitive where
+module SDL.Primitive
+  (
+  -- * Pixels
+    Pos
+  , Color
+  , pixel
 
-import Control.Exception      (throwIO)
-import Control.Monad          (unless)
-import Control.Monad.IO.Class (MonadIO, liftIO)
-import Data.Bits              ((.&.), (.|.))
-import Data.ByteString        (ByteString)
-import Data.ByteString.Unsafe (unsafeUseAsCStringLen, unsafePackCString)
-import Data.Data              (Data)
+  -- * Lines
+  , line
+  , Length
+  , hline
+  , vline
+  , smoothLine
+  , Width
+  , thickLine
+
+  -- * Rectangles
+  , rect
+  , Radius
+  , roundRect
+  , fillRect
+  , fillRoundRect
+
+  -- * Curves
+  , Start
+  , End
+  , arc
+  , circle
+  , smoothCircle
+  , fillCircle
+  , ellipse
+  , smoothEllipse
+  , fillEllipse
+  ) where
+
+import Control.Monad.IO.Class (MonadIO)
 import Data.Int               (Int16)
-import Data.Text              (Text)
-import Data.Text.Encoding     (decodeUtf8)
-import Data.Text.Foreign      (lengthWord16, unsafeCopyToPtr)
-import Data.Typeable          (Typeable)
-import Data.Word              (Word8, Word16)
-import Foreign.C.String       (CString, withCString)
-import Foreign.C.Types        (CUShort, CInt)
-import Foreign.Marshal.Alloc  (allocaBytes, alloca)
-import Foreign.Marshal.Utils  (with, fromBool, toBool)
-import Foreign.Ptr            (Ptr, castPtr, nullPtr)
-import Foreign.Storable       (peek, pokeByteOff)
-import GHC.Generics           (Generic)
+import Data.Word              (Word8)
+import Foreign.C.Types        (CInt)
 import Linear                 (V4(..), V2(..))
-import SDL                    (Surface(..))
-import SDL.Exception          (SDLException, throwIfNeg_)
-import SDL.Raw.Filesystem     (rwFromConstMem)
+import SDL.Exception          (throwIfNeg_)
 import SDL.Internal.Types     (Renderer(..))
 
-import qualified SDL.Raw
 import qualified SDL.Raw.Primitive
 
 -- | A position as a two-dimensional vector.
@@ -120,10 +134,12 @@ rect (Renderer p) (V2 x y) (V2 u v) (V4 r g b a) =
     SDL.Raw.Primitive.rectangle
       p (cint x) (cint y) (cint u) (cint v) r g b a
 
+-- | A radius in pixels.
 type Radius = CInt
 
--- | Same as 'rect', but the rectangle's corners are rounded. The extra
--- argument is the radius of the corner arcs.
+-- | Same as 'rect', but the rectangle's corners are rounded. Control the
+-- roundness using the 'Radius' argument, defining the radius of the corner
+-- arcs.
 roundRect :: MonadIO m => Renderer -> Pos -> Pos -> Radius -> Color -> m ()
 roundRect (Renderer p) (V2 x y) (V2 u v) rad (V4 r g b a) =
   throwIfNeg_ "SDL.Primitive.roundRect" "roundedRectangleRGBA" $
@@ -143,3 +159,62 @@ fillRoundRect (Renderer p) (V2 x y) (V2 u v) rad (V4 r g b a) =
   throwIfNeg_ "SDL.Primitive.fillRoundRect" "roundedBoxRGBA" $
     SDL.Raw.Primitive.roundedBox
       p (cint x) (cint y) (cint u) (cint v) (cint rad) r g b a
+
+-- | A starting position in degrees.
+type Start = CInt
+
+-- | An ending position in degrees.
+type End = CInt
+
+-- | Render an arc, its 'Pos' being its center. The 'Start' and 'End' arguments
+-- define the starting and ending points of the arc in degrees, zero degrees
+-- being downward and increasing counterclockwise.
+arc :: MonadIO m => Renderer -> Pos -> Radius -> Start -> End -> Color -> m ()
+arc (Renderer p) (V2 x y) rad start end (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.arc" "arcRGBA" $
+    SDL.Raw.Primitive.arc
+      p (cint x) (cint y) (cint rad) (cint start) (cint end) r g b a
+
+-- | Renders a transparent circle, bordered by a line of a given 'Color'.
+circle :: MonadIO m => Renderer -> Pos -> Radius -> Color -> m ()
+circle (Renderer p) (V2 x y) rad (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.circle" "circleRGBA" $
+    SDL.Raw.Primitive.circle
+      p (cint x) (cint y) (cint rad) r g b a
+
+-- | Same as 'circle', but fills it with the given 'Color' instead.
+fillCircle :: MonadIO m => Renderer -> Pos -> Radius -> Color -> m ()
+fillCircle (Renderer p) (V2 x y) rad (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.filledCircle" "filledCircleRGBA" $
+    SDL.Raw.Primitive.filledCircle
+      p (cint x) (cint y) (cint rad) r g b a
+
+-- | Same as 'circle', but the border is anti-aliased.
+smoothCircle :: MonadIO m => Renderer -> Pos -> Radius -> Color -> m ()
+smoothCircle (Renderer p) (V2 x y) rad (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.aaCircle" "aacircleRGBA" $
+    SDL.Raw.Primitive.aaCircle
+      p (cint x) (cint y) (cint rad) r g b a
+
+-- | Renders a transparent ellipse, bordered by a line of a given 'Color'. The
+-- 'Radius' arguments are the horizontal and vertical radius of the ellipse
+-- respectively, in pixels.
+ellipse :: MonadIO m => Renderer -> Pos -> Radius -> Radius -> Color -> m ()
+ellipse (Renderer p) (V2 x y) rx ry (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.ellipse" "ellipseRGBA" $
+    SDL.Raw.Primitive.ellipse
+      p (cint x) (cint y) (cint rx) (cint ry) r g b a
+
+-- | Same as 'ellipse', but makes the border anti-aliased.
+smoothEllipse :: MonadIO m => Renderer -> Pos -> Radius -> Radius -> Color -> m ()
+smoothEllipse (Renderer p) (V2 x y) rx ry (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.smoothEllipse" "aaEllipseRGBA" $
+    SDL.Raw.Primitive.aaEllipse
+      p (cint x) (cint y) (cint rx) (cint ry) r g b a
+
+-- | Same as 'ellipse', but fills it with the given 'Color' instead.
+fillEllipse :: MonadIO m => Renderer -> Pos -> Radius -> Radius -> Color -> m ()
+fillEllipse (Renderer p) (V2 x y) rx ry (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.fillEllipse" "filledEllipseRGBA" $
+    SDL.Raw.Primitive.filledEllipse
+      p (cint x) (cint y) (cint rx) (cint ry) r g b a
