@@ -60,6 +60,8 @@ module SDL.Primitive
   , fillEllipse
   , pie
   , fillPie
+  , Steps
+  , bezier
 
   -- * Polygons
   , polygon
@@ -251,6 +253,23 @@ fillPie (Renderer p) (V2 x y) rad start end (V4 r g b a) =
     SDL.Raw.Primitive.filledPie
       p (cint x) (cint y) (cint rad) (cint start) (cint end) r g b a
 
+-- | How many interpolation steps when rendering a bezier curve?
+type Steps = CInt
+
+-- | Renders a bezier curve of a given 'Color'. The input vectors contain the
+-- bezier curve's point loc ations on the x and y-axis, respectively. The input
+-- vectors need to be the same length, and those lengths must be at least 3,
+-- otherwise 'bezier' might raise an 'SDL.Exception.SDLException'. The same
+-- applies for the number of interpolation 'Steps': it must be at least 2.
+bezier :: MonadIO m => Renderer -> Vector Int16 -> Vector Int16 -> Steps -> Color -> m ()
+bezier (Renderer p) xs ys steps (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.bezier" "bezierRGBA" $
+    liftIO .
+      unsafeWith xs $ \xs' ->
+        unsafeWith ys $ \ys' ->
+          SDL.Raw.Primitive.bezier
+            p xs' ys' (fromIntegral $ length xs) steps r g b a
+
 -- | Render a transparent triangle, its edges being of a given 'Color'.
 triangle :: MonadIO m => Renderer -> Pos -> Pos -> Pos -> Color -> m ()
 triangle (Renderer p) (V2 x y) (V2 u v) (V2 t z) (V4 r g b a) =
@@ -275,8 +294,8 @@ fillTriangle (Renderer p) (V2 x y) (V2 u v) (V2 t z) (V4 r g b a) =
 
 -- | Render a transparent polygon, its edges of a given 'Color'. The input
 -- vectors contain the points' locations on the x and y-axis, respectively. The
--- input vectors need to be the of the same length, otherwise 'polygon' might
--- fail with an 'SDL.Exception.SDLException'.
+-- input vectors need to be the of the same length, and the lengths must be at
+-- least 3, otherwise 'polygon' might raise an 'SDL.Exception.SDLException'.
 polygon :: MonadIO m => Renderer -> Vector Int16 -> Vector Int16 -> Color -> m ()
 polygon (Renderer p) xs ys (V4 r g b a) =
   throwIfNeg_ "SDL.Primitive.polygon" "polygonRGBA" $

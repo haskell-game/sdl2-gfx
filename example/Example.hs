@@ -82,6 +82,7 @@ loopFor limit r fpsm = loop'
       SDL.Primitive.polygon r (fromList [100, 220, 430, 317, 50]) (fromList [30, 70, 200, 300, 500]) green
       SDL.Primitive.smoothPolygon r (fromList $ map (+40) [100, 220, 430, 317, 50]) (fromList $ map (+40) [30, 70, 200, 300, 500]) blue
       SDL.Primitive.fillPolygon r (fromList $ map (+300) [100, 220, 430, 317, 50]) (fromList $ map (+400) [30, 70, 200, 300, 500]) $ V4 200 20 20 128
+      SDL.Primitive.bezier r (fromList [70, 43, 23, 388, 239, 584, 444]) (fromList [546, 323, 110, 5, 483, 673, 332]) 5 $ V4 255 0 255 255
 
       SDL.renderPresent r
 
