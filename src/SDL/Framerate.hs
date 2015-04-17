@@ -28,7 +28,7 @@ module SDL.Framerate
 import Control.Monad          (void)
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Data.Typeable          (Typeable)
-import Foreign.Marshal.Alloc  (alloca)
+import Foreign.Marshal.Alloc  (malloc, free)
 import Foreign.Ptr            (Ptr)
 import Prelude         hiding (minimum, maximum)
 
@@ -42,10 +42,13 @@ newtype Manager = Manager (Ptr SDL.Raw.Framerate.Manager)
 -- | A certain number of frames per second.
 type Framerate = Int
 
--- | Create a new framerate 'Manager' using the default settings.
+-- | Create a new framerate 'Manager' using the default settings. You have to
+-- take care to call 'destroyManager' yourself. It's recommended to use 'with'
+-- instead.
 manager :: MonadIO m => m Manager
 manager =
-  fmap Manager . liftIO . alloca $ \ptr -> do
+  fmap Manager . liftIO $ do
+    ptr <- malloc
     SDL.Raw.Framerate.init ptr
     return ptr
 
