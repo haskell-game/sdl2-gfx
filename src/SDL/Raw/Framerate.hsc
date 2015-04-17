@@ -32,7 +32,6 @@ module SDL.Raw.Framerate
 
 #include "SDL2_framerate.h"
 
-import Control.Monad.IO.Class  (liftIO)
 import Data.Typeable           (Typeable)
 import Foreign.C.Types         (CFloat(..), CInt(..))
 import Foreign.Ptr             (Ptr)
