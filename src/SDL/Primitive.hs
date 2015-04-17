@@ -53,6 +53,8 @@ module SDL.Primitive
   , ellipse
   , smoothEllipse
   , fillEllipse
+  , pie
+  , fillPie
   ) where
 
 import Control.Monad.IO.Class (MonadIO)
@@ -220,3 +222,19 @@ fillEllipse (Renderer p) (V2 x y) rx ry (V4 r g b a) =
   throwIfNeg_ "SDL.Primitive.fillEllipse" "filledEllipseRGBA" $
     SDL.Raw.Primitive.filledEllipse
       p (cint x) (cint y) (cint rx) (cint ry) r g b a
+
+-- | Render a pie outline, its 'Pos' being its center. The 'Start' and 'End'
+-- arguments define the starting and ending points of the pie in degrees, zero
+-- degrees being east and increasing counterclockwise.
+pie :: MonadIO m => Renderer -> Pos -> Radius -> Start -> End -> Color -> m ()
+pie (Renderer p) (V2 x y) rad start end (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.pie" "pieRGBA" $
+    SDL.Raw.Primitive.pie
+      p (cint x) (cint y) (cint rad) (cint start) (cint end) r g b a
+
+-- | Same as 'pie', but fills it with the given 'Color' instead.
+fillPie :: MonadIO m => Renderer -> Pos -> Radius -> Start -> End -> Color -> m ()
+fillPie (Renderer p) (V2 x y) rad start end (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.fillPie" "filledPieRGBA" $
+    SDL.Raw.Primitive.filledPie
+      p (cint x) (cint y) (cint rad) (cint start) (cint end) r g b a

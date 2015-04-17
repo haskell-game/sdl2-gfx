@@ -122,8 +122,11 @@ liftF "thickLine" "thickLineRGBA"
 liftF "circle" "circleRGBA"
   [t|Renderer -> X -> Y -> Rad -> R -> G -> B -> A -> IO CInt|]
 
+-- | Degrees.
+type Deg = Int16
+
 liftF "arc" "arcRGBA"
-  [t|Renderer -> X -> Y -> Rad -> Rad -> Rad -> R -> G -> B -> A -> IO CInt|]
+  [t|Renderer -> X -> Y -> Rad -> Deg -> Deg -> R -> G -> B -> A -> IO CInt|]
 
 liftF "aaCircle" "aacircleRGBA"
   [t|Renderer -> X -> Y -> Rad -> R -> G -> B -> A -> IO CInt|]
@@ -141,10 +144,10 @@ liftF "filledEllipse" "filledEllipseRGBA"
   [t|Renderer -> X -> Y -> Rad -> Rad -> R -> G -> B -> A -> IO CInt|]
 
 liftF "pie" "pieRGBA"
-  [t|Renderer -> X -> Y -> Rad -> Rad -> Rad -> R -> G -> B -> A -> IO CInt|]
+  [t|Renderer -> X -> Y -> Rad -> Deg -> Deg -> R -> G -> B -> A -> IO CInt|]
 
 liftF "filledPie" "filledPieRGBA"
-  [t|Renderer -> X -> Y -> Rad -> Rad -> Rad -> R -> G -> B -> A -> IO CInt|]
+  [t|Renderer -> X -> Y -> Rad -> Deg -> Deg -> R -> G -> B -> A -> IO CInt|]
 
 liftF "trigon" "trigonRGBA"
   [t|Renderer -> X -> Y -> X -> Y -> X -> Y -> R -> G -> B -> A -> IO CInt|]

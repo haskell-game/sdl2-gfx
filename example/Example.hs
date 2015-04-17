@@ -73,6 +73,8 @@ loopFor limit r fpsm = loop'
       SDL.Primitive.ellipse r (V2 500 200) 70 (10+frames) green
       SDL.Primitive.smoothEllipse r (V2 500 200) 60 (5+frames) white
       SDL.Primitive.fillEllipse r (V2 500 200) 40 frames blue
+      SDL.Primitive.pie r (V2 640 500) 80 0 (frames*360 `div` limit) red
+      SDL.Primitive.fillPie r (V2 640 400) 60 0 (frames*360 `div` limit) blue
 
       SDL.renderPresent r
 
