@@ -19,6 +19,7 @@ module SDL.Framerate
   , manager
   , set
   , delay
+  , delay_
   , minimum
   , maximum
   , get
@@ -83,3 +84,7 @@ count (Manager ptr) = fmap fromIntegral $ SDL.Raw.Framerate.getFramecount ptr
 -- was called (possibly zero).
 delay :: MonadIO m => Manager -> m Int
 delay (Manager ptr) = fmap fromIntegral $ SDL.Raw.Framerate.framerateDelay ptr
+
+-- | Same as 'delay', but doesn't return the time since it was last called.
+delay_ :: MonadIO m => Manager -> m ()
+delay_ = void . delay
