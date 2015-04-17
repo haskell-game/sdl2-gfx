@@ -59,6 +59,7 @@ executable sdl2-gfx-example
   if flag(example)
     build-depends:
       base     >= 4.7 && < 5,
+      linear   >= 1.10.1.2,
       sdl2     >= 2.0,
       sdl2-gfx >= 0.1
   else
