@@ -158,7 +158,7 @@ liftF "aaTrigon" "aatrigonRGBA"
 liftF "filledTrigon" "filledTrigonRGBA"
   [t|Renderer -> X -> Y -> X -> Y -> X -> Y -> R -> G -> B -> A -> IO CInt|]
 
--- | How many of a certain thing, e.g. how many points.
+-- | How many of a certain thing, e.g. how many points, or steps.
 type N = CInt
 
 liftF "polygon" "polygonRGBA"

@@ -2,9 +2,10 @@
 
 module Main where
 
-import Foreign.C.Types (CInt)
-import Control.Monad (when)
-import Linear (V2(..), V4(..))
+import Control.Monad        (when)
+import Data.Vector.Storable (fromList)
+import Foreign.C.Types      (CInt)
+import Linear               (V2(..), V4(..))
 
 import qualified SDL
 import qualified SDL.Framerate
@@ -78,6 +79,9 @@ loopFor limit r fpsm = loop'
       SDL.Primitive.triangle r (V2 700 10) (V2 750 10) (V2 750 60) red
       SDL.Primitive.smoothTriangle r (V2 700 5) (V2 740 5) (V2 740 70) green
       SDL.Primitive.fillTriangle r (V2 650 40) (V2 690 50) (V2 700 90) blue
+      SDL.Primitive.polygon r (fromList [100, 220, 430, 317, 50]) (fromList [30, 70, 200, 300, 500]) green
+      SDL.Primitive.smoothPolygon r (fromList $ map (+40) [100, 220, 430, 317, 50]) (fromList $ map (+40) [30, 70, 200, 300, 500]) blue
+      SDL.Primitive.fillPolygon r (fromList $ map (+300) [100, 220, 430, 317, 50]) (fromList $ map (+400) [30, 70, 200, 300, 500]) $ V4 200 20 20 128
 
       SDL.renderPresent r
 

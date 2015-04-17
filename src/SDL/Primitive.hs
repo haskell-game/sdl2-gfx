@@ -60,13 +60,20 @@ module SDL.Primitive
   , fillEllipse
   , pie
   , fillPie
+
+  -- * Polygons
+  , polygon
+  , smoothPolygon
+  , fillPolygon
   ) where
 
-import Control.Monad.IO.Class (MonadIO)
+import Control.Monad.IO.Class (MonadIO, liftIO)
 import Data.Int               (Int16)
+import Data.Vector.Storable   (Vector, unsafeWith, length)
 import Data.Word              (Word8)
 import Foreign.C.Types        (CInt)
 import Linear                 (V4(..), V2(..))
+import Prelude         hiding (length)
 import SDL.Exception          (throwIfNeg_)
 import SDL.Internal.Types     (Renderer(..))
 
@@ -217,7 +224,7 @@ ellipse (Renderer p) (V2 x y) rx ry (V4 r g b a) =
 -- | Same as 'ellipse', but makes the border anti-aliased.
 smoothEllipse :: MonadIO m => Renderer -> Pos -> Radius -> Radius -> Color -> m ()
 smoothEllipse (Renderer p) (V2 x y) rx ry (V4 r g b a) =
-  throwIfNeg_ "SDL.Primitive.smoothEllipse" "aaEllipseRGBA" $
+  throwIfNeg_ "SDL.Primitive.smoothEllipse" "aaellipseRGBA" $
     SDL.Raw.Primitive.aaEllipse
       p (cint x) (cint y) (cint rx) (cint ry) r g b a
 
@@ -254,7 +261,7 @@ triangle (Renderer p) (V2 x y) (V2 u v) (V2 t z) (V4 r g b a) =
 -- | Same as 'triangle', but the edges are anti-aliased.
 smoothTriangle :: MonadIO m => Renderer -> Pos -> Pos -> Pos -> Color -> m ()
 smoothTriangle (Renderer p) (V2 x y) (V2 u v) (V2 t z) (V4 r g b a) =
-  throwIfNeg_ "SDL.Primitive.smoothTriangle" "aaTrigonRGBA" $
+  throwIfNeg_ "SDL.Primitive.smoothTriangle" "aatrigonRGBA" $
     SDL.Raw.Primitive.aaTrigon
       p (cint x) (cint y) (cint u) (cint v) (cint t) (cint z) r g b a
 
@@ -265,3 +272,36 @@ fillTriangle (Renderer p) (V2 x y) (V2 u v) (V2 t z) (V4 r g b a) =
   throwIfNeg_ "SDL.Primitive.fillTriangle" "filledTrigonRGBA" $
     SDL.Raw.Primitive.filledTrigon
       p (cint x) (cint y) (cint u) (cint v) (cint t) (cint z) r g b a
+
+-- | Render a transparent polygon, its edges of a given 'Color'. The input
+-- vectors contain the points' locations on the x and y-axis, respectively. The
+-- input vectors need to be the of the same length, otherwise 'polygon' might
+-- fail with an 'SDL.Exception.SDLException'.
+polygon :: MonadIO m => Renderer -> Vector Int16 -> Vector Int16 -> Color -> m ()
+polygon (Renderer p) xs ys (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.polygon" "polygonRGBA" $
+    liftIO .
+      unsafeWith xs $ \xs' ->
+        unsafeWith ys $ \ys' ->
+          SDL.Raw.Primitive.polygon
+            p xs' ys' (fromIntegral $ length xs) r g b a
+
+-- | Same as 'polygon', but the edges are drawn anti-aliased.
+smoothPolygon :: MonadIO m => Renderer -> Vector Int16 -> Vector Int16 -> Color -> m ()
+smoothPolygon (Renderer p) xs ys (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.smoothPolygon" "aapolygonRGBA" $
+    liftIO .
+      unsafeWith xs $ \xs' ->
+        unsafeWith ys $ \ys' ->
+          SDL.Raw.Primitive.aaPolygon
+            p xs' ys' (fromIntegral $ length xs) r g b a
+
+-- | Same as 'polygon', but the polygon is filled with the given 'Color'.
+fillPolygon :: MonadIO m => Renderer -> Vector Int16 -> Vector Int16 -> Color -> m ()
+fillPolygon (Renderer p) xs ys (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.fillPolygon" "filledPolygonRGBA" $
+    liftIO .
+      unsafeWith xs $ \xs' ->
+        unsafeWith ys $ \ys' ->
+          SDL.Raw.Primitive.filledPolygon
+            p xs' ys' (fromIntegral $ length xs) r g b a
