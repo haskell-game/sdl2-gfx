@@ -36,6 +36,11 @@ module SDL.Primitive
   , Width
   , thickLine
 
+  -- * Triangles
+  , triangle
+  , smoothTriangle
+  , fillTriangle
+
   -- * Rectangles
   , rectangle
   , Radius
@@ -172,7 +177,7 @@ type End = CInt
 
 -- | Render an arc, its 'Pos' being its center. The 'Start' and 'End' arguments
 -- define the starting and ending points of the arc in degrees, zero degrees
--- being downward and increasing counterclockwise.
+-- being south and increasing counterclockwise.
 arc :: MonadIO m => Renderer -> Pos -> Radius -> Start -> End -> Color -> m ()
 arc (Renderer p) (V2 x y) rad start end (V4 r g b a) =
   throwIfNeg_ "SDL.Primitive.arc" "arcRGBA" $
@@ -238,3 +243,25 @@ fillPie (Renderer p) (V2 x y) rad start end (V4 r g b a) =
   throwIfNeg_ "SDL.Primitive.fillPie" "filledPieRGBA" $
     SDL.Raw.Primitive.filledPie
       p (cint x) (cint y) (cint rad) (cint start) (cint end) r g b a
+
+-- | Render a transparent triangle, its edges being of a given 'Color'.
+triangle :: MonadIO m => Renderer -> Pos -> Pos -> Pos -> Color -> m ()
+triangle (Renderer p) (V2 x y) (V2 u v) (V2 t z) (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.triangle" "trigonRGBA" $
+    SDL.Raw.Primitive.trigon
+      p (cint x) (cint y) (cint u) (cint v) (cint t) (cint z) r g b a
+
+-- | Same as 'triangle', but the edges are anti-aliased.
+smoothTriangle :: MonadIO m => Renderer -> Pos -> Pos -> Pos -> Color -> m ()
+smoothTriangle (Renderer p) (V2 x y) (V2 u v) (V2 t z) (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.smoothTriangle" "aaTrigonRGBA" $
+    SDL.Raw.Primitive.aaTrigon
+      p (cint x) (cint y) (cint u) (cint v) (cint t) (cint z) r g b a
+
+-- | Same as 'triangle', but the triangle is filled with the given 'Color'
+-- instead.
+fillTriangle :: MonadIO m => Renderer -> Pos -> Pos -> Pos -> Color -> m ()
+fillTriangle (Renderer p) (V2 x y) (V2 u v) (V2 t z) (V4 r g b a) =
+  throwIfNeg_ "SDL.Primitive.fillTriangle" "filledTrigonRGBA" $
+    SDL.Raw.Primitive.filledTrigon
+      p (cint x) (cint y) (cint u) (cint v) (cint t) (cint z) r g b a
