@@ -253,11 +253,12 @@ fillPie (Renderer p) (V2 x y) rad start end (V4 r g b a) =
     SDL.Raw.Primitive.filledPie
       p (cint x) (cint y) (cint rad) (cint start) (cint end) r g b a
 
--- | How many interpolation steps when rendering a bezier curve?
+-- | How many interpolation steps when rendering a bezier curve? The higher
+-- this is, the smoother the curve and more resource-intensive the render.
 type Steps = CInt
 
 -- | Renders a bezier curve of a given 'Color'. The input vectors contain the
--- bezier curve's point loc ations on the x and y-axis, respectively. The input
+-- bezier curve's point locations on the x and y-axis, respectively. The input
 -- vectors need to be the same length, and those lengths must be at least 3,
 -- otherwise 'bezier' might raise an 'SDL.Exception.SDLException'. The same
 -- applies for the number of interpolation 'Steps': it must be at least 2.

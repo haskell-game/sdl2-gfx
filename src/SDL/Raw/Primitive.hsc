@@ -40,6 +40,7 @@ module SDL.Raw.Primitive
   , circle
   , aaCircle
   , filledCircle
+  , Deg
   , arc
   , ellipse
   , aaEllipse
