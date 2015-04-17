@@ -36,6 +36,7 @@ import Foreign.Ptr             (Ptr)
 import Foreign.Storable        (Storable(..))
 import Data.Word               (Word32)
 import Prelude          hiding (init)
+import SDL.Raw.Helper          (liftF)
 
 pattern FPS_DEFAULT     = (#const FPS_DEFAULT)
 pattern FPS_LOWER_LIMIT = (#const FPS_LOWER_LIMIT)
@@ -68,37 +69,17 @@ instance Storable Manager where
     (#poke FPSmanager, lastticks)  ptr lastTicks
     (#poke FPSmanager, rate)       ptr rate
 
-foreign import ccall "SDL2_framerate.h SDL_initFramerate"
-  init' :: Ptr Manager -> IO ()
+liftF "init" "SDL_initFramerate"
+  [t|Ptr Manager -> IO ()|]
 
-{-# INLINE init #-}
-init :: MonadIO m => Ptr Manager -> m ()
-init = liftIO . init'
+liftF "getFramecount" "SDL_getFramecount"
+  [t|Ptr Manager -> IO CInt|]
 
-foreign import ccall "SDL2_framerate.h SDL_getFramecount"
-  getFramecount' :: Ptr Manager -> IO CInt
+liftF "framerateDelay" "SDL_framerateDelay"
+  [t|Ptr Manager -> IO Word32|]
 
-{-# INLINE getFramecount #-}
-getFramecount :: MonadIO m => Ptr Manager -> m CInt
-getFramecount = liftIO . getFramecount'
+liftF "getFramerate" "SDL_getFramerate"
+  [t|Ptr Manager -> IO CInt|]
 
-foreign import ccall "SDL2_framerate.h SDL_framerateDelay"
-  framerateDelay' :: Ptr Manager -> IO Word32
-
-{-# INLINE framerateDelay #-}
-framerateDelay :: MonadIO m => Ptr Manager -> m Word32
-framerateDelay = liftIO . framerateDelay'
-
-foreign import ccall "SDL2_framerate.h SDL_getFramerate"
-  getFramerate' :: Ptr Manager -> IO CInt
-
-{-# INLINE getFramerate #-}
-getFramerate :: MonadIO m => Ptr Manager -> m CInt
-getFramerate = liftIO . getFramerate'
-
-foreign import ccall "SDL2_framerate.h SDL_setFramerate"
-  setFramerate' :: Ptr Manager -> Word32 -> IO CInt
-
-{-# INLINE setFramerate #-}
-setFramerate :: MonadIO m => Ptr Manager -> Word32 -> m CInt
-setFramerate ptr = liftIO . setFramerate' ptr
+liftF "setFramerate" "SDL_setFramerate"
+  [t|Ptr Manager -> Word32 -> IO CInt|]
