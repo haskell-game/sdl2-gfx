@@ -22,7 +22,9 @@ library
     SDL.Primitive,
     SDL.Raw.Primitive,
     SDL.Framerate,
-    SDL.Raw.Framerate
+    SDL.Raw.Framerate,
+    SDL.Rotozoom,
+    SDL.Raw.Rotozoom
 
   other-modules:
     SDL.Raw.Helper
