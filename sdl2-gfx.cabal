@@ -24,7 +24,9 @@ library
     SDL.Framerate,
     SDL.Raw.Framerate,
     SDL.Rotozoom,
-    SDL.Raw.Rotozoom
+    SDL.Raw.Rotozoom,
+    SDL.ImageFilter,
+    SDL.Raw.ImageFilter
 
   other-modules:
     SDL.Raw.Helper

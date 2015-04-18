@@ -50,6 +50,7 @@ module SDL.Raw.ImageFilter
 
 import Foreign.C.Types (CUChar(..), CInt(..), CUInt(..))
 import Foreign.Ptr     (Ptr)
+import Prelude  hiding (div)
 import SDL.Raw.Helper  (liftF)
 
 liftF "mmxDetect" "SDL_imageFilterMMXdetect"
