@@ -13,8 +13,8 @@ zoom functionality from @SDL2_rotozoom.h@.
 
 {-# OPTIONS_GHC -fno-warn-missing-signatures #-}
 
-{-# LANGUAGE PatternSynonyms     #-}
-{-# LANGUAGE TemplateHaskell     #-}
+{-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module SDL.Raw.Rotozoom
   ( pattern SMOOTHING_ON
