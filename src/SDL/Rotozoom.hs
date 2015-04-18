@@ -20,6 +20,7 @@ module SDL.Rotozoom
   , Smooth(..)
   , rotozoom
   , rotozoomXY
+  , Size
   , rotozoomSize
   , rotozoomSizeXY
   , zoom
