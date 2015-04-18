@@ -6,8 +6,8 @@ License     : MIT
 Maintainer  : sinisa@bidin.cc
 Stability   : experimental
 
-Raw bindings to the @SDL2_gfx@ library, specifically the surface rotation and
-zoom functionality from @SDL2_rotozoom.h@.
+Raw bindings to the @SDL2_gfx@ library, specifically the MMX image filter
+functionality from @SDL2_imageFilter.h@.
 
 -}
 
@@ -47,8 +47,6 @@ module SDL.Raw.ImageFilter
   , clipToRange
   , normalizeLinear
   ) where
-
-#include "SDL2_rotozoom.h"
 
 import Foreign.C.Types (CUChar(..), CInt(..), CUInt(..))
 import Foreign.Ptr     (Ptr)
