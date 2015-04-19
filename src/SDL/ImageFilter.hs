@@ -17,7 +17,7 @@ module SDL.ImageFilter
   , disableMMX
   , enableMMX
 
-  -- * Binary operations
+  -- * Vector operations
   , add
   , mean
   , sub
@@ -30,22 +30,21 @@ module SDL.ImageFilter
   , bitOr
   , div
   , bitNegation
-
-  -- , addByte
-  -- , addUInt
-  -- , addByteToHalf
-  -- , subByte
-  -- , subUInt
-  -- , shiftRight
-  -- , shiftRightUInt
-  -- , multByByte
-  -- , shiftRightAndMultByByte
-  -- , shiftLeftByte
-  -- , shiftLeftUInt
-  -- , shiftLeft
-  -- , binarizeUsingThreshold
-  -- , clipToRange
-  -- , normalizeLinear
+  , addByte
+  , addUInt
+  , addByteToHalf
+  , subByte
+  , subUInt
+  , shiftRight
+  , shiftRightUInt
+  , multByByte
+  , shiftRightAndMultByByte
+  , shiftLeftByte
+  , shiftLeftUInt
+  , shiftLeft
+  , binarizeUsingThreshold
+  , clipToRange
+  , normalizeLinear
   ) where
 
 import Control.Monad.IO.Class (MonadIO, liftIO)
@@ -60,8 +59,6 @@ import System.IO.Unsafe       (unsafePerformIO)
 
 import qualified SDL.Raw.ImageFilter
 import qualified Data.Vector.Storable as V
-
--- type Bytes s = MVector s Word8
 
 -- | Are we using MMX code?
 usingMMX :: MonadIO m => m Bool
@@ -129,6 +126,10 @@ bitOr = binary SDL.Raw.ImageFilter.bitOr
 div :: Vector Word8 -> Vector Word8 -> Vector Word8
 div = binary SDL.Raw.ImageFilter.div
 
+{-# INLINE cuchar #-}
+cuchar :: Word8 -> CUChar
+cuchar = fromIntegral
+
 bitNegation :: Vector Word8 -> Vector Word8
 bitNegation x =
   unsafePerformIO .
@@ -137,18 +138,80 @@ bitNegation x =
         SDL.Raw.ImageFilter.bitNegation
           (castPtr x') y' (fromIntegral $ V.length x)
 
--- addByte = undefined
--- addUInt = undefined
--- addByteToHalf = undefined
--- subByte = undefined
--- subUInt = undefined
--- shiftRight = undefined
--- shiftRightUInt = undefined
--- multByByte = undefined
--- shiftRightAndMultByByte = undefined
--- shiftLeftByte = undefined
--- shiftLeftUInt = undefined
--- shiftLeft = undefined
--- binarizeUsingThreshold = undefined
--- clipToRange = undefined
--- normalizeLinear = undefined
+binaryByte
+  :: (Ptr CUChar -> Ptr CUChar -> CUInt -> CUChar -> IO CInt) ->
+     (Word8 -> Vector Word8 -> Vector Word8)
+binaryByte f b x =
+  unsafePerformIO .
+    V.unsafeWith x $ \x' ->
+      mallocVector (V.length x) $ \y' ->
+        f (castPtr x') y' (fromIntegral $ V.length x) (cuchar b)
+
+addByte :: Word8 -> Vector Word8 -> Vector Word8
+addByte = binaryByte SDL.Raw.ImageFilter.addByte
+
+addByteToHalf :: Word8 -> Vector Word8 -> Vector Word8
+addByteToHalf = binaryByte SDL.Raw.ImageFilter.addByteToHalf
+
+subByte :: Word8 -> Vector Word8 -> Vector Word8
+subByte = binaryByte SDL.Raw.ImageFilter.subByte
+
+shiftRight :: Word8 -> Vector Word8 -> Vector Word8
+shiftRight = binaryByte SDL.Raw.ImageFilter.shiftRight
+
+multByByte :: Word8 -> Vector Word8 -> Vector Word8
+multByByte = binaryByte SDL.Raw.ImageFilter.multByByte
+
+shiftLeftByte :: Word8 -> Vector Word8 -> Vector Word8
+shiftLeftByte = binaryByte SDL.Raw.ImageFilter.shiftLeftByte
+
+shiftRightUInt :: Word8 -> Vector Word8 -> Vector Word8
+shiftRightUInt = binaryByte SDL.Raw.ImageFilter.shiftRightUInt
+
+shiftLeftUInt :: Word8 -> Vector Word8 -> Vector Word8
+shiftLeftUInt = binaryByte SDL.Raw.ImageFilter.shiftLeftUInt
+
+shiftLeft :: Word8 -> Vector Word8 -> Vector Word8
+shiftLeft = binaryByte SDL.Raw.ImageFilter.shiftLeft
+
+binarizeUsingThreshold :: Word8 -> Vector Word8 -> Vector Word8
+binarizeUsingThreshold = binaryByte SDL.Raw.ImageFilter.binarizeUsingThreshold
+
+binaryUInt
+  :: (Ptr CUChar -> Ptr CUChar -> CUInt -> CUInt -> IO CInt) ->
+     (CUInt -> Vector Word8 -> Vector Word8)
+binaryUInt f i x =
+  unsafePerformIO .
+    V.unsafeWith x $ \x' ->
+      mallocVector (V.length x) $ \y' ->
+        f (castPtr x') y' (fromIntegral $ V.length x) i
+
+addUInt :: CUInt -> Vector Word8 -> Vector Word8
+addUInt = binaryUInt SDL.Raw.ImageFilter.addUInt
+
+subUInt :: CUInt -> Vector Word8 -> Vector Word8
+subUInt = binaryUInt SDL.Raw.ImageFilter.subUInt
+
+shiftRightAndMultByByte :: Word8 -> Word8 -> Vector Word8 -> Vector Word8
+shiftRightAndMultByByte s m x =
+  unsafePerformIO .
+    V.unsafeWith x $ \x' ->
+      mallocVector (V.length x) $ \y' ->
+        SDL.Raw.ImageFilter.shiftRightAndMultByByte
+          (castPtr x') y' (fromIntegral $ V.length x) (cuchar s) (cuchar m)
+
+clipToRange :: Word8 -> Word8 -> Vector Word8 -> Vector Word8
+clipToRange a b x =
+  unsafePerformIO .
+    V.unsafeWith x $ \x' ->
+      mallocVector (V.length x) $ \y' ->
+        SDL.Raw.ImageFilter.clipToRange
+          (castPtr x') y' (fromIntegral $ V.length x) (cuchar a) (cuchar b)
+
+normalizeLinear :: CInt -> CInt -> CInt -> CInt -> Vector Word8 -> Vector Word8
+normalizeLinear cmin cmax nmin nmax x =
+  unsafePerformIO .
+    V.unsafeWith x $ \x' ->
+      mallocVector (V.length x) $ \y' ->
+        SDL.Raw.ImageFilter.normalizeLinear
+          (castPtr x') y' (fromIntegral $ V.length x) cmin cmax nmin nmax

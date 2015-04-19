@@ -117,7 +117,7 @@ liftF "shiftRight" "SDL_imageFilterShiftRight"
   [t|Ptr CUChar -> Ptr CUChar -> CUInt -> CUChar -> IO CInt|]
 
 liftF "shiftRightUInt" "SDL_imageFilterShiftRightUint"
-  [t|Ptr CUChar -> Ptr CUChar -> CUInt -> CUInt -> IO CInt|]
+  [t|Ptr CUChar -> Ptr CUChar -> CUInt -> CUChar -> IO CInt|]
 
 liftF "multByByte" "SDL_imageFilterMultByByte"
   [t|Ptr CUChar -> Ptr CUChar -> CUInt -> CUChar -> IO CInt|]
