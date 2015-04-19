@@ -4,21 +4,9 @@
 
 #### Haskell bindings to SDL2_gfx
 
-Currently a work in progress.
-
-What's been added and should work:
-
-* framerate management from SDL2_framerate.h
-* drawing primitives from SDL2_gfxPrimitives.h
-
-What is currently missing:
-
-* surface rotation and zooming from SDL2_rotozoom.h
-* image filters from SDL2_imageFilter.h
-
-<!-- Both the raw and the higher level bindings should allow you to use any aspect -->
-<!-- of the original SDL2_gfx library. Please report an issue if you encounter a bug -->
-<!-- or feel that something is missing. -->
+Both the raw and the higher level bindings should allow you to use any aspect
+of the original SDL2_gfx library. Please report an issue if you encounter a bug
+or feel that something is missing.
 
 ##### Install
 
@@ -45,9 +33,9 @@ can also help, as the bindings are close to a direct mapping.
 
 ##### Example
 
-A small example executable is included with the library. It uses almost
-everything exposed by the library to draw a chaotic jumbled mess on your
-screen. You can find it in the `example` directory.
+A small example executable is included with the library. It uses many parts of
+the library to draw a chaotic jumbled mess on your screen. You can find it in
+the `example` directory.
 
 ```bash
 cd sdl2-gfx
