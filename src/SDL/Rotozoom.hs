@@ -27,8 +27,8 @@ module SDL.Rotozoom
   , zoomXY
   , zoomSize
   , zoomSizeXY
-  -- , shrink   TODO: add
-  -- , rotate90 TODO: add
+  , shrink
+  , rotate90
   ) where
 
 import Data.Data              (Data)
@@ -127,3 +127,19 @@ zoomSizeXY (V2 w h) zx zy =
       alloca $ \h' -> do
         SDL.Raw.Rotozoom.zoomSize w h (realToFrac zx) (realToFrac zy) w' h'
         V2 <$> peek w' <*> peek h'
+
+-- | Shrink a surface by an integer ratio. The two 'CInt' arguments are the
+-- horizontal and vertical shrinking ratios: 2 halves a dimension, 5 makes it a
+-- fifth of its original size etc. The resulting 'Surface' is anti-aliased and,
+-- if the input wasn't 8-bit or 32-bit, converted to a 32-bit RGBA format.
+shrink :: MonadIO m => Surface -> CInt -> CInt -> m Surface
+shrink (Surface p) rx ry =
+  fmap SDL.Surface $
+    SDL.Raw.Rotozoom.shrink p rx ry
+
+-- | Given a number of clockwise rotations to perform, rotates 'Surface' in
+-- increments of 90 degrees. Since no interpolation is done, this is faster
+-- than 'rotozoomer'.
+rotate90 :: MonadIO m => Surface -> Int -> m Surface
+rotate90 (Surface p) =
+  fmap SDL.Surface . SDL.Raw.Rotozoom.rotate90 p . fromIntegral . (`rem` 4)
