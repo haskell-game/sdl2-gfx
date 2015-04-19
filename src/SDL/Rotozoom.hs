@@ -10,9 +10,8 @@ Bindings to @SDL2_gfx@'s surface rotation and zoom functionality.
 
 -}
 
-{-# LANGUAGE DeriveDataTypeable #-}
-{-# LANGUAGE DeriveGeneric      #-}
-{-# LANGUAGE LambdaCase         #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE LambdaCase    #-}
 
 module SDL.Rotozoom
   ( Angle
@@ -31,8 +30,6 @@ module SDL.Rotozoom
   , rotate90
   ) where
 
-import Data.Data              (Data)
-import Data.Typeable          (Typeable)
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Foreign.C.Types        (CInt)
 import Foreign.Marshal.Alloc  (alloca)
@@ -52,7 +49,7 @@ type Zoom = Double
 
 -- | Whether resulting 'Surface's are anti-aliased or not.
 data Smooth = Smooth | Rough
-  deriving (Eq, Enum, Ord, Bounded, Data, Generic, Typeable, Read, Show)
+  deriving (Eq, Enum, Ord, Bounded, Generic, Read, Show)
 
 smoothToCInt :: Smooth -> CInt
 smoothToCInt = \case

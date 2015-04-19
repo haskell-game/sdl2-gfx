@@ -13,10 +13,9 @@ functionality from @SDL2_framerate.h@.
 
 {-# OPTIONS_GHC -fno-warn-missing-signatures #-}
 
-{-# LANGUAGE DeriveDataTypeable  #-}
-{-# LANGUAGE PatternSynonyms     #-}
-{-# LANGUAGE RecordWildCards     #-}
-{-# LANGUAGE TemplateHaskell     #-}
+{-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module SDL.Raw.Framerate
   ( Manager(..)
@@ -32,13 +31,12 @@ module SDL.Raw.Framerate
 
 #include "SDL2_framerate.h"
 
-import Data.Typeable           (Typeable)
-import Foreign.C.Types         (CFloat(..), CInt(..))
-import Foreign.Ptr             (Ptr)
-import Foreign.Storable        (Storable(..))
-import Data.Word               (Word32)
-import Prelude          hiding (init)
-import SDL.Raw.Helper          (liftF)
+import Foreign.C.Types  (CFloat(..), CInt(..))
+import Foreign.Ptr      (Ptr)
+import Foreign.Storable (Storable(..))
+import Data.Word        (Word32)
+import Prelude   hiding (init)
+import SDL.Raw.Helper   (liftF)
 
 pattern FPS_DEFAULT     = (#const FPS_DEFAULT)
 pattern FPS_LOWER_LIMIT = (#const FPS_LOWER_LIMIT)
@@ -50,7 +48,7 @@ data Manager = Manager
   , baseTicks  :: Word32
   , lastTicks  :: Word32
   , rate       :: Word32
-  } deriving (Eq, Show, Typeable)
+  } deriving (Eq, Show, Read)
 
 instance Storable Manager where
   alignment = sizeOf

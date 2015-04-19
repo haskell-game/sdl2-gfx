@@ -30,7 +30,6 @@ module SDL.Framerate
 
 import Control.Monad          (void)
 import Control.Monad.IO.Class (MonadIO, liftIO)
-import Data.Typeable          (Typeable)
 import Foreign.Marshal.Alloc  (malloc, free)
 import Foreign.Ptr            (Ptr)
 import Prelude         hiding (minimum, maximum)
@@ -40,7 +39,7 @@ import qualified SDL.Raw.Framerate
 -- | A framerate manager, counting frames and keeping track of time delays
 -- necessary to reach a certain target framerate.
 newtype Manager = Manager (Ptr SDL.Raw.Framerate.Manager)
-  deriving (Eq, Typeable)
+  deriving (Eq, Show)
 
 -- | A certain number of frames per second.
 type Framerate = Int
