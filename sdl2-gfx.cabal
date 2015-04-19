@@ -1,5 +1,5 @@
 name:                sdl2-gfx
-version:             0.1
+version:             0.2
 synopsis:            Bindings to SDL2_gfx.
 description:         Haskell bindings to SDL2_gfx.
 license:             MIT
@@ -64,7 +64,7 @@ executable sdl2-gfx-example
       base     >= 4.7 && < 5,
       linear   >= 1.10.1.2,
       sdl2     >= 2.0,
-      sdl2-gfx >= 0.1,
+      sdl2-gfx >= 0.2,
       vector   >= 0.10.9.0
   else
     buildable: False
