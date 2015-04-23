@@ -45,8 +45,9 @@ newtype Manager = Manager (Ptr SDL.Raw.Framerate.Manager)
 type Framerate = Int
 
 -- | Creates a new framerate 'Manager', sets a target 'Framerate' and frees the
--- 'Manager' after the inner computation ends. This is the recommended way to
--- create a 'Manager'.
+-- 'Manager' after the inner computation ends.
+--
+-- This is the recommended way to create a 'Manager'.
 with :: MonadIO m => Framerate -> (Manager -> m a) -> m a
 with fps act = do
   m <- manager
@@ -55,9 +56,10 @@ with fps act = do
   destroyManager m -- TODO: Use a MonadIO version of bracket.
   return r
 
--- | Create a new framerate 'Manager' using the default settings. You have to
--- take care to call 'destroyManager' yourself. It's recommended to use 'with'
--- instead.
+-- | Create a new framerate 'Manager' using the default settings.
+--
+-- You have to take care to call 'destroyManager' yourself. It's recommended to
+-- use 'with' instead.
 manager :: MonadIO m => m Manager
 manager =
   fmap Manager . liftIO $ do
@@ -73,9 +75,10 @@ minimum = SDL.Raw.Framerate.FPS_LOWER_LIMIT
 maximum :: Framerate
 maximum = SDL.Raw.Framerate.FPS_UPPER_LIMIT
 
--- | Set a target framerate and reset delay interpolation. Note that the given
--- framerate must be within the allowed range -- otherwise the minimum or
--- maximum allowed framerate is used instead.
+-- | Set a target framerate and reset delay interpolation.
+--
+-- Note that the given framerate must be within the allowed range -- otherwise
+-- the minimum or maximum allowed framerate is used instead.
 set :: MonadIO m => Manager -> Framerate -> m ()
 set (Manager ptr) = void . set' . min maximum . max minimum
   where
@@ -90,10 +93,13 @@ count :: MonadIO m => Manager -> m Int
 count (Manager ptr) = fmap fromIntegral $ SDL.Raw.Framerate.getFramecount ptr
 
 -- | Generate and apply a delay in order to maintain a constant target
--- framerate. This should be called once per rendering loop. Delay will
--- automatically be set to zero if the computer cannot keep up (if rendering is
--- too slow). Returns the number of milliseconds since the last time 'delay'
--- was called (possibly zero).
+-- framerate.
+--
+-- This should be called once per rendering loop.
+--
+-- Delay will automatically be set to zero if the computer cannot keep up (if
+-- rendering is too slow). Returns the number of milliseconds since the last
+-- time 'delay' was called (possibly zero).
 delay :: MonadIO m => Manager -> m Int
 delay (Manager ptr) = fmap fromIntegral $ SDL.Raw.Framerate.framerateDelay ptr
 
