@@ -16,7 +16,7 @@ source-repository head
   location: https://github.com/sbidin/sdl2-gfx.git
 
 library
-  ghc-options: -Wall -O2
+  ghc-options: -Wall
 
   exposed-modules:
     SDL.Primitive,
