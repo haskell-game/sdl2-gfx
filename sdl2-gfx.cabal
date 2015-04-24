@@ -4,8 +4,8 @@ synopsis:            Bindings to SDL2_gfx.
 description:         Haskell bindings to SDL2_gfx.
 license:             MIT
 license-file:        LICENSE
-author:              Siniša Biđin
-maintainer:          sinisa@bidin.eu
+author:              Siniša Biđin <sinisa@bidin.eu>
+maintainer:          Siniša Biđin <sinisa@bidin.eu>
 copyright:           Copyright © 2015 Siniša Biđin
 category:            Graphics, Foreign
 build-type:          Simple
