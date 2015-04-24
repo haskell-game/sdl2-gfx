@@ -62,7 +62,7 @@ smoothToCInt = \case
 -- 32-bit RGBA.
 rotozoom :: MonadIO m => Surface -> Angle -> Zoom -> Smooth -> m Surface
 rotozoom (Surface p) a z s =
-  fmap SDL.Surface $
+  SDL.Surface <$>
     SDL.Raw.Rotozoom.rotozoom p (realToFrac a) (realToFrac z) (smoothToCInt s)
 
 -- | Same as 'rotozoom', but applies different horizontal and vertical scaling
@@ -71,7 +71,7 @@ rotozoom (Surface p) a z s =
 -- The 'Zoom' arguments are the horizontal and vertical zoom, respectively.
 rotozoomXY :: MonadIO m => Surface -> Angle -> Zoom -> Zoom -> Smooth -> m Surface
 rotozoomXY (Surface p) a zx zy s =
-  fmap SDL.Surface $
+  SDL.Surface <$>
     SDL.Raw.Rotozoom.rotozoomXY
       p (realToFrac a) (realToFrac zx) (realToFrac zy) (smoothToCInt s)
 
@@ -113,7 +113,7 @@ zoom surface z = zoomXY surface z z
 -- axis.
 zoomXY :: MonadIO m => Surface -> Zoom -> Zoom -> Smooth -> m Surface
 zoomXY (Surface p) zx zy s =
-  fmap SDL.Surface $
+  SDL.Surface <$>
     SDL.Raw.Rotozoom.zoom p (realToFrac zx) (realToFrac zy) (smoothToCInt s)
 
 {-# INLINE zoomSize #-}
@@ -139,9 +139,7 @@ zoomSizeXY (V2 w h) zx zy =
 -- The resulting 'Surface' is anti-aliased and, if the input wasn't 8-bit or
 -- 32-bit, converted to a 32-bit RGBA format.
 shrink :: MonadIO m => Surface -> CInt -> CInt -> m Surface
-shrink (Surface p) rx ry =
-  fmap SDL.Surface $
-    SDL.Raw.Rotozoom.shrink p rx ry
+shrink (Surface p) rx ry = SDL.Surface <$> SDL.Raw.Rotozoom.shrink p rx ry
 
 -- | Given a number of clockwise rotations to perform, rotates 'Surface' in
 -- increments of 90 degrees.

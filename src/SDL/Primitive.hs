@@ -15,7 +15,6 @@ All of the monadic functions within this module are capable of throwing an
 
 -}
 
-{-# LANGUAGE DeriveGeneric      #-}
 {-# LANGUAGE LambdaCase         #-}
 {-# LANGUAGE OverloadedStrings  #-}
 

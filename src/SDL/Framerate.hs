@@ -86,11 +86,11 @@ set (Manager ptr) = void . set' . min maximum . max minimum
 
 -- | Get the currently set framerate.
 get :: MonadIO m => Manager -> m Framerate
-get (Manager ptr) = fmap fromIntegral $ SDL.Raw.Framerate.getFramerate ptr
+get (Manager ptr) = fromIntegral <$> SDL.Raw.Framerate.getFramerate ptr
 
 -- | Returns the framecount. Each time 'delay' is called, a frame is counted.
 count :: MonadIO m => Manager -> m Int
-count (Manager ptr) = fmap fromIntegral $ SDL.Raw.Framerate.getFramecount ptr
+count (Manager ptr) = fromIntegral <$> SDL.Raw.Framerate.getFramecount ptr
 
 -- | Generate and apply a delay in order to maintain a constant target
 -- framerate.
@@ -101,7 +101,7 @@ count (Manager ptr) = fmap fromIntegral $ SDL.Raw.Framerate.getFramecount ptr
 -- rendering is too slow). Returns the number of milliseconds since the last
 -- time 'delay' was called (possibly zero).
 delay :: MonadIO m => Manager -> m Int
-delay (Manager ptr) = fmap fromIntegral $ SDL.Raw.Framerate.framerateDelay ptr
+delay (Manager ptr) = fromIntegral <$> SDL.Raw.Framerate.framerateDelay ptr
 
 -- | Same as 'delay', but doesn't return the time since it was last called.
 delay_ :: MonadIO m => Manager -> m ()
