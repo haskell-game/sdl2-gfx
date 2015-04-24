@@ -5,7 +5,7 @@ description:         Haskell bindings to SDL2_gfx.
 license:             MIT
 license-file:        LICENSE
 author:              Siniša Biđin
-maintainer:          sinisa@bidin.cc
+maintainer:          sinisa@bidin.eu
 copyright:           Copyright © 2015 Siniša Biđin
 category:            Graphics, Foreign
 build-type:          Simple
@@ -42,7 +42,7 @@ library
     base             >= 4.7 && < 5,
     linear           >= 1.10.1.2,
     sdl2             >= 2.0,
-    template-haskell >= 2.10.0.0,
+    template-haskell,
     transformers     >= 0.2,
     vector           >= 0.10.9.0
 
@@ -64,7 +64,7 @@ executable sdl2-gfx-example
       base     >= 4.7 && < 5,
       linear   >= 1.10.1.2,
       sdl2     >= 2.0,
-      sdl2-gfx >= 0.2,
+      sdl2-gfx,
       vector   >= 0.10.9.0
   else
     buildable: False
