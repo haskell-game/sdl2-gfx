@@ -40,7 +40,9 @@ library
 
   build-depends:
     base             >= 4.7 && < 5,
+    lifted-base      >= 0.2,
     linear           >= 1.10.1.2,
+    monad-control    >= 1.0,
     sdl2             >= 2.0,
     template-haskell,
     transformers     >= 0.2,

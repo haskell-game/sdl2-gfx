@@ -11,7 +11,9 @@ should allow you to set, manage and query a target application framerate.
 
 -}
 
-{-# LANGUAGE LambdaCase #-}
+
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE LambdaCase       #-}
 
 module SDL.Framerate
   ( Framerate
@@ -28,11 +30,13 @@ module SDL.Framerate
   , destroyManager
   ) where
 
-import Control.Monad          (void)
-import Control.Monad.IO.Class (MonadIO, liftIO)
-import Foreign.Marshal.Alloc  (malloc, free)
-import Foreign.Ptr            (Ptr)
-import Prelude         hiding (minimum, maximum)
+import Control.Exception.Lifted    (bracket)
+import Control.Monad               (void)
+import Control.Monad.IO.Class      (MonadIO, liftIO)
+import Control.Monad.Trans.Control (MonadBaseControl)
+import Foreign.Marshal.Alloc       (malloc, free)
+import Foreign.Ptr                 (Ptr)
+import Prelude              hiding (minimum, maximum)
 
 import qualified SDL.Raw.Framerate
 
@@ -48,13 +52,11 @@ type Framerate = Int
 -- 'Manager' after the inner computation ends.
 --
 -- This is the recommended way to create a 'Manager'.
-with :: MonadIO m => Framerate -> (Manager -> m a) -> m a
-with fps act = do
-  m <- manager
-  set m fps
-  r <- act m
-  destroyManager m -- TODO: Use a MonadIO version of bracket.
-  return r
+with
+  :: (MonadBaseControl IO m, MonadIO m) => Framerate -> (Manager -> m a) -> m a
+with fps act =
+  bracket manager destroyManager $ \m ->
+    set m fps >> act m
 
 -- | Create a new framerate 'Manager' using the default settings.
 --
