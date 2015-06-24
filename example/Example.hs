@@ -6,6 +6,7 @@ import Control.Monad        (when)
 import Data.Vector.Storable (fromList)
 import Foreign.C.Types      (CInt)
 import Linear               (V2(..), V4(..))
+import SDL                  (($=))
 
 import qualified SDL
 import qualified SDL.Framerate
@@ -52,7 +53,7 @@ loopFor limit r fpsm = loop'
       frames <- fromIntegral `fmap` SDL.Framerate.count fpsm
 
       -- Clear the screen!
-      SDL.setRenderDrawColor r black
+      SDL.renderDrawColor r $= black
       SDL.renderClear r
 
       -- Run each of the functions from SDL.Primitives.
