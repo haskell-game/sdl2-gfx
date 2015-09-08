@@ -53,8 +53,8 @@ loopFor limit r fpsm = loop'
       frames <- fromIntegral `fmap` SDL.Framerate.count fpsm
 
       -- Clear the screen!
-      SDL.renderDrawColor r $= black
-      SDL.renderClear r
+      SDL.rendererDrawColor r $= black
+      SDL.clear r
 
       -- Run each of the functions from SDL.Primitives.
       -- For added chaos, move everything by framecount.
@@ -85,7 +85,7 @@ loopFor limit r fpsm = loop'
       SDL.Primitive.fillPolygon r (fromList $ map (+300) [100, 220, 430, 317, 50]) (fromList $ map (+400) [30, 70, 200, 300, 500]) $ V4 200 20 20 128
       SDL.Primitive.bezier r (fromList [70, 43, 23, 388, 239, 584, 444]) (fromList [546, 323, 110, 5, 483, 673, 332]) 5 $ V4 255 0 255 255
 
-      SDL.renderPresent r
+      SDL.present r
 
       SDL.Framerate.delay_ fpsm -- Delay to keep framerate constant.
 
