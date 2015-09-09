@@ -3,7 +3,7 @@
 Module      : SDL.Raw.ImageFilter
 Copyright   : (c) 2015 Siniša Biđin
 License     : MIT
-Maintainer  : sinisa@bidin.cc
+Maintainer  : sinisa@bidin.eu
 Stability   : experimental
 
 Raw bindings to the @SDL2_gfx@ library, specifically the MMX image filter

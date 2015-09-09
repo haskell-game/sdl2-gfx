@@ -3,7 +3,7 @@
 Module      : SDL.Primitive
 Copyright   : (c) 2015 Siniša Biđin
 License     : MIT
-Maintainer  : sinisa@bidin.cc
+Maintainer  : sinisa@bidin.eu
 Stability   : experimental
 
 Bindings to @SDL2_gfx@'s primitives drawing functionality. These functions
