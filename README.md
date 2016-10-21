@@ -1,6 +1,6 @@
 # sdl2-gfx
 
-[![Hackage](https://img.shields.io/hackage/v/lens.svg)](https://hackage.haskell.org/package/sdl2-mixer)
+[![Hackage](https://img.shields.io/hackage/v/sdl2-gfx.svg)](https://hackage.haskell.org/package/sdl2-gfx)
 [![Build Status](https://travis-ci.org/sbidin/sdl2-gfx.svg?branch=master)](https://travis-ci.org/sbidin/sdl2-gfx)
 
 #### Haskell bindings to SDL2_gfx
