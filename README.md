@@ -1,5 +1,6 @@
 # sdl2-gfx
 
+[![Hackage](https://img.shields.io/hackage/v/lens.svg)](https://hackage.haskell.org/package/sdl2-mixer)
 [![Build Status](https://travis-ci.org/sbidin/sdl2-gfx.svg?branch=master)](https://travis-ci.org/sbidin/sdl2-gfx)
 
 #### Haskell bindings to SDL2_gfx
@@ -10,24 +11,13 @@ or feel that something is missing.
 
 ##### Install
 
-This library depends on the new API version of
-[haskell-game/sdl2](https://github.com/haskell-game/sdl2), available on
-Hackage as
-[sdl2 version 2.0.0 or greater](http://hackage.haskell.org/package/sdl2). With
-that in mind, you can install sdl2-gfx from source like this:
-
 ```bash
-git clone git@github.com:sbidin/sdl2-gfx.git
-cd sdl2-gfx
-cabal install
+cabal install sdl2-gfx
 ```
-
-Note that you might get compile errors if you're not using the latest GHC. Only
-7.10 is currently tested.
 
 ##### Documentation
 
-You can find the documentation [here](https://bidin.eu/docs/sdl2-gfx).
+For documentation, [visit Hackage](https://hackage.haskell.org/package/sdl2-gfx).
 
 The
 [original SDL2_gfx documentation](http://www.ferzkopp.net/Software/SDL2_gfx/Docs/html/index.html)
