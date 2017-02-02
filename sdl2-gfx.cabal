@@ -56,7 +56,7 @@ library
 
 flag example
   description: Build the example executable
-  default:     True
+  default:     False
 
 executable sdl2-gfx-example
   ghc-options: -Wall
