@@ -74,7 +74,7 @@ import Data.Word              (Word8)
 import Foreign.C.Types        (CInt)
 import Linear                 (V4(..), V2(..))
 import Prelude         hiding (length)
-import SDL.ExceptionHelper    (throwIfNeg_)
+import SDL.Internal.Exception (throwIfNeg_)
 import SDL.Internal.Types     (Renderer(..))
 
 import qualified SDL.Raw.Primitive
