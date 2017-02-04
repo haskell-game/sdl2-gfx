@@ -35,9 +35,9 @@ import Foreign.C.Types        (CInt)
 import Foreign.Marshal.Alloc  (alloca)
 import Foreign.Ptr            (Ptr)
 import Foreign.Storable       (peek)
-import Linear                 (V2(..))
 import GHC.Generics           (Generic)
 import SDL                    (Surface(..))
+import SDL.Vect               (V2(..))
 
 import qualified SDL.Raw
 import qualified SDL.Raw.Rotozoom

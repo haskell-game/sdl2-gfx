@@ -5,7 +5,7 @@ module Main where
 import Control.Monad        (when)
 import Data.Vector.Storable (fromList)
 import Foreign.C.Types      (CInt)
-import Linear               (V2(..), V4(..))
+import SDL.Vect             (V2(..), V4(..))
 import SDL                  (($=))
 
 import qualified SDL

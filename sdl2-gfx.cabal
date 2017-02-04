@@ -42,12 +42,10 @@ library
     base             >= 4.7 && < 5,
     bytestring,
     lifted-base      >= 0.2,
-    linear           >= 1.10.1.2,
     monad-control    >= 1.0,
     sdl2             >= 2.0,
     template-haskell,
     text,
-    transformers     >= 0.2,
     vector           >= 0.10.9.0
 
   default-language:
@@ -66,7 +64,6 @@ executable sdl2-gfx-example
   if flag(example)
     build-depends:
       base     >= 4.7 && < 5,
-      linear   >= 1.10.1.2,
       sdl2     >= 2.0,
       sdl2-gfx,
       vector   >= 0.10.9.0
