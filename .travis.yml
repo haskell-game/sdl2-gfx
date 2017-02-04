@@ -3,7 +3,7 @@ language: haskell
 sudo: required
 
 env:
-  - GHCVER=8.0.1 CABALVER=1.24 LD_LIBRARY_PATH=/usr/local/lib
+  - GHCVER=8.0.2 CABALVER=1.24 HAPPYVER=1.19.5 LD_LIBRARY_PATH=/usr/local/lib
 
 before_install:
   - cd ..
@@ -18,21 +18,22 @@ before_install:
   - tar xf SDL2_gfx-*.tar.gz
   - cd SDL2_gfx-* && ./autogen.sh && ./configure && make && sudo make install && cd ..
 
-  # Install GHC and cabal-install.
+  # Install ghc, cabal-install and happy.
   - travis_retry sudo add-apt-repository -y ppa:hvr/ghc
   - travis_retry sudo apt-get update
-  - travis_retry sudo apt-get install cabal-install-$CABALVER ghc-$GHCVER happy
+  - travis_retry sudo apt-get install cabal-install-$CABALVER ghc-$GHCVER happy-$HAPPYVER
   - export CABAL=cabal
   - export PATH=/opt/ghc/$GHCVER/bin:$PATH
   - rm -rf ~/.cabal
   - $CABAL update
+  - $CABAL --version
 
 install:
   # Install haskell-game/sdl2.
   - git clone https://github.com/haskell-game/sdl2.git
-  - cd sdl2 && $CABAL install -j && cd ..
+  - cd sdl2 && $CABAL install && cd ..
 
 script:
   - cd sdl2-gfx
-  - $CABAL install --only-dependencies -j
+  - $CABAL install --only-dependencies
   - $CABAL build
