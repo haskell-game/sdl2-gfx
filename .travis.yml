@@ -3,7 +3,7 @@ language: haskell
 sudo: required
 
 env:
-  - GHCVER=7.10.1 CABALVER=1.22 LD_LIBRARY_PATH=/usr/local/lib
+  - GHCVER=8.0.1 CABALVER=1.24 LD_LIBRARY_PATH=/usr/local/lib
 
 before_install:
   - cd ..
