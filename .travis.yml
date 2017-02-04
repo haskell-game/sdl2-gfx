@@ -31,9 +31,8 @@ before_install:
 install:
   # Install haskell-game/sdl2.
   - git clone https://github.com/haskell-game/sdl2.git
-  - cd sdl2 && $CABAL install && cd ..
+  - cd sdl2 && $CABAL install --flags="no-linear" && cd ..
 
 script:
   - cd sdl2-gfx
-  - $CABAL install --only-dependencies
-  - $CABAL build
+  - $CABAL install --flags="example"
