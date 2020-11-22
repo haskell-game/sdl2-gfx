@@ -39,8 +39,6 @@ module SDL.ImageFilter
   , shiftRightUInt
   , multByByte
   , shiftRightAndMultByByte
-  , shiftLeftByte
-  , shiftLeftUInt
   , shiftLeft
   , binarizeUsingThreshold
   , clipToRange
@@ -162,14 +160,8 @@ shiftRight = binaryByte SDL.Raw.ImageFilter.shiftRight
 multByByte :: Word8 -> Vector Word8 -> Vector Word8
 multByByte = binaryByte SDL.Raw.ImageFilter.multByByte
 
-shiftLeftByte :: Word8 -> Vector Word8 -> Vector Word8
-shiftLeftByte = binaryByte SDL.Raw.ImageFilter.shiftLeftByte
-
 shiftRightUInt :: Word8 -> Vector Word8 -> Vector Word8
 shiftRightUInt = binaryByte SDL.Raw.ImageFilter.shiftRightUInt
-
-shiftLeftUInt :: Word8 -> Vector Word8 -> Vector Word8
-shiftLeftUInt = binaryByte SDL.Raw.ImageFilter.shiftLeftUInt
 
 shiftLeft :: Word8 -> Vector Word8 -> Vector Word8
 shiftLeft = binaryByte SDL.Raw.ImageFilter.shiftLeft

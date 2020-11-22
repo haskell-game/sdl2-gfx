@@ -20,12 +20,8 @@ module SDL.Rotozoom
   , rotozoom
   , rotozoomXY
   , Size
-  , rotozoomSize
-  , rotozoomSizeXY
   , zoom
   , zoomXY
-  , zoomSize
-  , zoomSizeXY
   , shrink
   , rotate90
   ) where
@@ -83,27 +79,6 @@ rotozoomXY (Surface p _) a zx zy s =
 -- | A surface size, packing width and height.
 type Size = V2 CInt
 
--- | Given the 'Size' of an input 'Surface', returns the 'Size' of a 'Surface'
--- resulting from a 'rotozoom' call.
-rotozoomSize :: MonadIO m => Size -> Angle -> Zoom -> m Size
-rotozoomSize (V2 w h) a z =
-  liftIO .
-    alloca $ \w' ->
-      alloca $ \h' -> do
-        SDL.Raw.Rotozoom.rotozoomSize w h (realToFrac a) (realToFrac z) w' h'
-        V2 <$> peek w' <*> peek h'
-
--- | Same as 'rotozoomSize', but for different horizontal and vertical scaling
--- factors.
-rotozoomSizeXY :: MonadIO m => Size -> Angle -> Zoom -> Zoom -> m Size
-rotozoomSizeXY (V2 w h) a zx zy =
-  liftIO .
-    alloca $ \w' ->
-      alloca $ \h' -> do
-        SDL.Raw.Rotozoom.rotozoomSizeXY
-          w h (realToFrac a) (realToFrac zx) (realToFrac zy) w' h'
-        V2 <$> peek w' <*> peek h'
-
 {-# INLINE zoom #-}
 -- | Same as 'rotozoom', but only performs the zoom.
 --
@@ -120,21 +95,6 @@ zoomXY :: MonadIO m => Surface -> Zoom -> Zoom -> Smooth -> m Surface
 zoomXY (Surface p _) zx zy s =
   unmanaged <$>
     SDL.Raw.Rotozoom.zoom p (realToFrac zx) (realToFrac zy) (smoothToCInt s)
-
-{-# INLINE zoomSize #-}
--- | Calculates the 'Size' of a resulting 'Surface' for a 'zoom' call.
-zoomSize :: MonadIO m => Size -> Zoom -> m Size
-zoomSize size z = zoomSizeXY size z z
-
--- | Same as 'zoomSize', but for different horizontal and vertical scaling
--- factors.
-zoomSizeXY :: MonadIO m => Size -> Angle -> Zoom -> m Size
-zoomSizeXY (V2 w h) zx zy =
-  liftIO .
-    alloca $ \w' ->
-      alloca $ \h' -> do
-        SDL.Raw.Rotozoom.zoomSize w h (realToFrac zx) (realToFrac zy) w' h'
-        V2 <$> peek w' <*> peek h'
 
 -- | Shrink a surface by an integer ratio.
 --

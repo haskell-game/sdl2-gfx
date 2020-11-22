@@ -53,7 +53,6 @@ module SDL.Raw.Primitive
   , polygon
   , aaPolygon
   , filledPolygon
-  , texturedPolygon
   ) where
 
 import Data.Int                (Int16)
@@ -170,9 +169,6 @@ liftF "aaPolygon" "aapolygonRGBA"
 
 liftF "filledPolygon" "filledPolygonRGBA"
   [t|Renderer -> Ptr X -> Ptr Y -> N -> R -> G -> B -> A -> IO CInt|]
-
-liftF "texturedPolygon" "texturedPolygonRGBA"
-  [t|Renderer -> Ptr X -> Ptr Y -> N -> Ptr Surface -> X -> Y -> R -> G -> B -> A -> IO CInt|]
 
 liftF "bezier" "bezierRGBA"
   [t|Renderer -> Ptr X -> Ptr Y -> N -> N -> R -> G -> B -> A -> IO CInt|]

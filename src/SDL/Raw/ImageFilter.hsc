@@ -40,8 +40,6 @@ module SDL.Raw.ImageFilter
   , shiftRightUInt
   , multByByte
   , shiftRightAndMultByByte
-  , shiftLeftByte
-  , shiftLeftUInt
   , shiftLeft
   , binarizeUsingThreshold
   , clipToRange
@@ -124,12 +122,6 @@ liftF "multByByte" "SDL_imageFilterMultByByte"
 
 liftF "shiftRightAndMultByByte" "SDL_imageFilterShiftRightAndMultByByte"
   [t|Ptr CUChar -> Ptr CUChar -> CUInt -> CUChar -> CUChar -> IO CInt|]
-
-liftF "shiftLeftByte" "SDL_imageFilterLeftByte"
-  [t|Ptr CUChar -> Ptr CUChar -> CUInt -> CUChar -> IO CInt|]
-
-liftF "shiftLeftUInt" "SDL_imageFilterLeftUint"
-  [t|Ptr CUChar -> Ptr CUChar -> CUInt -> CUChar -> IO CInt|]
 
 liftF "shiftLeft" "SDL_imageFilterShiftLeft"
   [t|Ptr CUChar -> Ptr CUChar -> CUInt -> CUChar -> IO CInt|]

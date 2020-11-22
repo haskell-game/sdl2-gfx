@@ -21,10 +21,7 @@ module SDL.Raw.Rotozoom
   , pattern SMOOTHING_OFF
   , rotozoom
   , rotozoomXY
-  , rotozoomSize
-  , rotozoomSizeXY
   , zoom
-  , zoomSize
   , shrink
   , rotate90
   ) where
@@ -45,17 +42,8 @@ liftF "rotozoom" "rotozoomSurface"
 liftF "rotozoomXY" "rotozoomSurfaceXY"
   [t|Ptr Surface -> CDouble -> CDouble -> CDouble -> CInt -> IO (Ptr Surface)|]
 
-liftF "rotozoomSize" "rotozoomSize"
-  [t|CInt -> CInt -> CDouble -> CDouble -> Ptr CInt -> Ptr CInt -> IO ()|]
-
-liftF "rotozoomSizeXY" "rotozoomSizeXY"
-  [t|CInt -> CInt -> CDouble -> CDouble -> CDouble -> Ptr CInt -> Ptr CInt -> IO ()|]
-
 liftF "zoom" "zoomSurface"
   [t|Ptr Surface -> CDouble -> CDouble -> CInt -> IO (Ptr Surface)|]
-
-liftF "zoomSize" "zoomSize"
-  [t|CInt -> CInt -> CDouble -> CDouble -> Ptr CInt -> Ptr CInt -> IO ()|]
 
 liftF "shrink" "shrinkSurface"
   [t|Ptr Surface -> CInt -> CInt -> IO (Ptr Surface)|]
