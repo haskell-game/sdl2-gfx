@@ -171,8 +171,8 @@ liftF "aaPolygon" "aapolygonRGBA"
 liftF "filledPolygon" "filledPolygonRGBA"
   [t|Renderer -> Ptr X -> Ptr Y -> N -> R -> G -> B -> A -> IO CInt|]
 
-liftF "texturedPolygon" "texturedPolygonRGBA"
-  [t|Renderer -> Ptr X -> Ptr Y -> N -> Ptr Surface -> X -> Y -> R -> G -> B -> A -> IO CInt|]
+liftF "texturedPolygon" "texturedPolygon"
+  [t|Renderer -> Ptr X -> Ptr Y -> N -> Ptr Surface -> X -> Y -> IO CInt|]
 
 liftF "bezier" "bezierRGBA"
   [t|Renderer -> Ptr X -> Ptr Y -> N -> N -> R -> G -> B -> A -> IO CInt|]

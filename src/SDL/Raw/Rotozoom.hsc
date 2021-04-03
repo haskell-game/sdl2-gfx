@@ -45,16 +45,16 @@ liftF "rotozoom" "rotozoomSurface"
 liftF "rotozoomXY" "rotozoomSurfaceXY"
   [t|Ptr Surface -> CDouble -> CDouble -> CDouble -> CInt -> IO (Ptr Surface)|]
 
-liftF "rotozoomSize" "rotozoomSize"
+liftF "rotozoomSize" "rotozoomSurfaceSize"
   [t|CInt -> CInt -> CDouble -> CDouble -> Ptr CInt -> Ptr CInt -> IO ()|]
 
-liftF "rotozoomSizeXY" "rotozoomSizeXY"
+liftF "rotozoomSizeXY" "rotozoomSurfaceSizeXY"
   [t|CInt -> CInt -> CDouble -> CDouble -> CDouble -> Ptr CInt -> Ptr CInt -> IO ()|]
 
 liftF "zoom" "zoomSurface"
   [t|Ptr Surface -> CDouble -> CDouble -> CInt -> IO (Ptr Surface)|]
 
-liftF "zoomSize" "zoomSize"
+liftF "zoomSize" "zoomSurfaceSize"
   [t|CInt -> CInt -> CDouble -> CDouble -> Ptr CInt -> Ptr CInt -> IO ()|]
 
 liftF "shrink" "shrinkSurface"
